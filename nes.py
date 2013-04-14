@@ -1,5 +1,3 @@
-from PIL import Image, ImageDraw
-from Tkinter import Tk, Canvas, PhotoImage
 import os
 import numpy as np
 import scipy.misc.pilutil as smp
@@ -8,53 +6,81 @@ class NesRom:
     
     _headerLength = 16
     
-    _headerField1Start = 0
-    _headerField1Bytes = 4
-    _headerField1Expected = "NES\x1a"
-    
-    _headerField2Start = 4
-    _headerField2Bytes = 1
-
-    _headerField3Start = 5
-    _headerField3Bytes = 1
-
-    isThisFormat = 0
-    numPRGBanks = 0
-    numCHRBanks = 0
-
     _prgLength = 0
     _chrLength = 0
 
+    isThisFormat = True
+    numPRGBanks = 0
+    numCHRBanks = 0
+    mirroringValue = 0
+    mapper = 0
+    extendedMapper = 0
+    numROMBanks = 0
+    isNTSC = True
+
     fileName = ""
+
+    
 
     def __init__(self, fileName):
         self.fileName = fileName
 
     def readRom(self):
+        """Reads in the rom and sets object state depending on header info"""
+
+        # The first 16 bytes in the file is header info:
+        #  Field 1: 4 bytes: NES^Z
+        #  Field 2: 1 byte: Number of 16KB pages of program code
+        #  Field 3: 1 byte: Number of 8KB pages of characters (sprites)
+        #  Field 4: 1 byte: First hex digit: mirroring value. Second hex digit: mapper
+        #  Field 5: 1 byte: First hex digit only: extended mapper (I think)
+        #  Field 6: 1 byte: Number of 8KB rom banks. If 0 then it's really 1.
+        #  Field 7: 1 byte: First bit: 1 for a PAL cartridge else NTSC. Other bits: zero
+        #  The rest of the fields: TODO
+        fieldLengths = [4, 1, 1, 1, 1, 1, 1, 6]
+        headerField1Expected = "NES\x1a"
+
+        prgPageLength = 16384
+        chrPageLength = 8192
+
         rom = open(self.fileName, "rb")
 
         try:
-            rom.seek(0)        
-            field1 = rom.read(self._headerField1Bytes)
+            field1 = rom.read(fieldLengths[0])
         
-            if field1 == self._headerField1Expected:
-                self.isThisFormat = 1
+            if field1 == headerField1Expected:
+                self.isThisFormat = True
             
-                rom.seek(self._headerField2Start)
-                field2 = rom.read(self._headerField2Bytes)
+                self.numPRGBanks = ord(rom.read(fieldLengths[1]))
+                self._prgLength = self.numPRGBanks * prgPageLength
             
-                self.numPRGBanks = ord(field2)
-                self._prgLength = self.numPRGBanks * 16384
+                self.numCHRBanks = ord(rom.read(fieldLengths[2]))
+                self._chrLength = self.numCHRBanks * chrPageLength
             
-                rom.seek(self._headerField3Start)
-                field3 = rom.read(self._headerField3Bytes)
-                self.numCHRBanks = ord(field3)
-                self._chrLength = self.numCHRBanks * 8192
-            
+                field4 = str(ord(rom.read(fieldLengths[3])))
+                self.mirroring = field4[0]
+                self.mapper = field4[1]
+
+                extendedMapper = str(ord(rom.read(fieldLengths[4])))
+
+                field6 = ord(rom.read(fieldLengths[5]))
+                self.numROMBanks = 1 if field6 == 0 else field6
+
+                self.isNTSC = ord(rom.read(fieldLengths[6])) == 0
+                
+                field8 = rom.read(fieldLengths[7])
+                
+                counter = 0
+                while counter<fieldLengths[7]:
+                    print ord(field8[counter])
+                    counter += 1
+
             else:
-                self.isThisFormat = 0
+                self.isThisFormat = False
         finally:
             rom.close()
+
+
 
     def getSprites(self):
         rom = open(self.fileName, "rb")
@@ -67,24 +93,23 @@ class NesRom:
         spriteHeight = 8
         spriteWidth = 8
         
-        chrStart = self._prgLength + 16
+        chrStart = self._prgLength + self._headerLength
         rom.seek(chrStart)
 
-        while rom.tell() < (16 + self._prgLength + self._chrLength):
+        while rom.tell() < (self._headerLength + self._prgLength + self._chrLength):
             sprite = rom.read(16)
-            
-            rowCounter = 0
-            
+                       
             data = np.zeros((spriteWidth,spriteHeight,3), dtype=np.uint8 )
 
+            rowCounter = 0
             while rowCounter < 16:
                 
                 channelA = bin(ord(sprite[rowCounter]))[2:].zfill(8)
                 channelB = bin(ord(sprite[rowCounter+1]))[2:].zfill(8)
 
-                colCounter = 0
+                colCounter = 7
 
-                while colCounter <= 7:
+                while colCounter >= 0:
                     colourNum = int(channelB[colCounter])*2 + int(channelA[colCounter])
                     
                     colourOut = black
@@ -100,7 +125,7 @@ class NesRom:
                     img = smp.toimage(data)
                     img.save("output/image%d.bmp" % rom.tell())
     
-                    colCounter += 1
+                    colCounter -= 1
                     
                 rowCounter += 2
 
