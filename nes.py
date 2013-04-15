@@ -1,6 +1,7 @@
 import os
 import numpy as np
 import scipy.misc.pilutil as smp
+import struct
 
 class NesRom:
     
@@ -20,11 +21,25 @@ class NesRom:
 
     fileName = ""
 
-    
-
     def __init__(self, fileName):
         self.fileName = fileName
+        self.__getFileContent()
 
+
+    def __getFileContent(self):
+        """Read file data into a var for later use."""
+        rom = open(self.fileName, "rb")
+
+        try:            
+            self.__fileData = rom.read()
+        finally:
+            rom.close()
+
+        #todelete    
+    def __getBytes(self, offset, numberOfBytes, dataType):
+        formatString = dataType.ljust(numberOfBytes, dataType)
+        return 
+    
     def readRom(self):
         """Reads in the rom and sets object state depending on header info"""
 
@@ -37,52 +52,46 @@ class NesRom:
         #  Field 6: 1 byte: Number of 8KB rom banks. If 0 then it's really 1.
         #  Field 7: 1 byte: First bit: 1 for a PAL cartridge else NTSC. Other bits: zero
         #  The rest of the fields: TODO
-        fieldLengths = [4, 1, 1, 1, 1, 1, 1, 6]
-        headerField1Expected = "NES\x1a"
+        fieldOffsets = [0, 4, 5, 6, 7, 8, 9, 10]
+        headerField1Expected = ord("N"), ord("E"), ord("S"), ord("\x1a")
 
         prgPageLength = 16384
         chrPageLength = 8192
 
-        rom = open(self.fileName, "rb")
-
-        try:
-            field1 = rom.read(fieldLengths[0])
+        if struct.unpack("BBBB", self.__fileData[fieldOffsets[0]:fieldOffsets[1]]) == headerField1Expected:        
+            self.isThisFormat = True
+            
+            self.numPRGBanks = ord(self.__fileData[fieldOffsets[1]:fieldOffsets[2]])
+            self._prgLength = self.numPRGBanks * prgPageLength
+                
+            self.numCHRBanks = ord(self.__fileData[fieldOffsets[2]:fieldOffsets[3]])
+            self._chrLength = self.numCHRBanks * chrPageLength
+            
+            field4 = str(ord(self.__fileData[fieldOffsets[3]:fieldOffsets[4]]))
+            self.mirroring = field4[0]
+            self.mapper = field4[1]
+            
+            extendedMapper = str(ord(self.__fileData[fieldOffsets[4]:fieldOffsets[5]]))
+            
+            field6 = ord(self.__fileData[fieldOffsets[5]:fieldOffsets[6]])
+            self.numROMBanks = 1 if field6 == 0 else field6
+            
+            self.isNTSC = ord(self.__fileData[fieldOffsets[6]:fieldOffsets[7]]) == 0
+            
+            field8 = self.__fileData[fieldOffsets[7]:fieldOffsets[7]+6]
+            
+            counter = 0
+            while counter<6:
+                if ord(field8[counter]) != 0:
+                    self.isThisFormat = False
+                counter += 1
+        else:
+            self.isThisFormat = False
         
-            if field1 == headerField1Expected:
-                self.isThisFormat = True
-            
-                self.numPRGBanks = ord(rom.read(fieldLengths[1]))
-                self._prgLength = self.numPRGBanks * prgPageLength
-            
-                self.numCHRBanks = ord(rom.read(fieldLengths[2]))
-                self._chrLength = self.numCHRBanks * chrPageLength
-            
-                field4 = str(ord(rom.read(fieldLengths[3])))
-                self.mirroring = field4[0]
-                self.mapper = field4[1]
-
-                extendedMapper = str(ord(rom.read(fieldLengths[4])))
-
-                field6 = ord(rom.read(fieldLengths[5]))
-                self.numROMBanks = 1 if field6 == 0 else field6
-
-                self.isNTSC = ord(rom.read(fieldLengths[6])) == 0
-                
-                field8 = rom.read(fieldLengths[7])
-                
-                counter = 0
-                while counter<fieldLengths[7]:
-                    print ord(field8[counter])
-                    counter += 1
-
-            else:
-                self.isThisFormat = False
-        finally:
-            rom.close()
-
 
 
     def getSprites(self):
+        """This really isn't so good. Will come back to it later."""
         rom = open(self.fileName, "rb")
 
         black = [0,0,0]

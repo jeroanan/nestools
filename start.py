@@ -8,6 +8,7 @@ if len(sys.argv)<2:
     sys.exit(0)
 
 a = nes.NesRom(sys.argv[1])
+
 a.readRom()
 
 print "Rom has %d program data banks" % a.numPRGBanks
