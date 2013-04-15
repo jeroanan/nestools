@@ -35,11 +35,6 @@ class NesRom:
         finally:
             rom.close()
 
-        #todelete    
-    def __getBytes(self, offset, numberOfBytes, dataType):
-        formatString = dataType.ljust(numberOfBytes, dataType)
-        return 
-    
     def readRom(self):
         """Reads in the rom and sets object state depending on header info"""
 
@@ -51,7 +46,7 @@ class NesRom:
         #  Field 5: 1 byte: First hex digit only: extended mapper (I think)
         #  Field 6: 1 byte: Number of 8KB rom banks. If 0 then it's really 1.
         #  Field 7: 1 byte: First bit: 1 for a PAL cartridge else NTSC. Other bits: zero
-        #  The rest of the fields: TODO
+        #  Field 8: 6 bytes: All zeroes.
         fieldOffsets = [0, 4, 5, 6, 7, 8, 9, 10]
         headerField1Expected = ord("N"), ord("E"), ord("S"), ord("\x1a")
 
