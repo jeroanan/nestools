@@ -26,7 +26,7 @@ class NesRom:
     _titleData = ""    
 
     def __init__(self, fileName):
-        """Initialise the object. This will cause the give rom 
+        """Initialise the object. This will cause the given rom 
         to be read into memory."""
         self._fileName = fileName
         self.__getFileContent()
@@ -87,6 +87,11 @@ class NesRom:
             rom.close()
     
 
+    def release(self):
+        """Deletes the binary file from memory. Enables me to keep object state
+        without having biggish memory footprint."""
+        del self._fileData
+        
     def readRom(self):
         """Sets the object state dpeending on what's found in file header/footer"""
 
