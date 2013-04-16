@@ -11,33 +11,70 @@ class NesRom:
     CHR_PAGE_LENGTH = 8192
     TITLE_DATA_LENGTH = 128
 
-    __prgLength = 0
-    __chrLength = 0
-
-    isThisFormat = True
-    numPRGBanks = 0
-    numCHRBanks = 0
-    mirroringValue = 0
-    mapper = 0
-    extendedMapper = 0
-    numROMBanks = 0
-    isNTSC = True
-    titleData = ""
-
-    fileName = ""
+    _prgLength = 0
+    _chrLength = 0
+    _fileName = ""
+    _fileData = ""
+    _isThisFormat = True
+    _numPRGBanks = 0
+    _numCHRBanks = 0
+    _mirroringValue = 0
+    _mapper = 0
+    _extendedMapper = 0
+    _numROMBanks = 0
+    _isNTSC = True
+    _titleData = ""    
 
     def __init__(self, fileName):
-        self.fileName = fileName
+        self._fileName = fileName
         self.__getFileContent()
 
+    @property
+    def isThisFormat(self):
+        return self._isThisFormat
+
+    @property
+    def numPRGBanks(self):
+        return self._numPRGBanks
+    
+    @property
+    def numCHRBanks(self):
+        return self._numCHRBanks
+
+    @property
+    def mirroringValue(self):
+        return self._mirroringValue
+
+    @property
+    def mapper(self):
+        return self._mapper
+
+    @property
+    def extendedMapper(self):
+        return self._extendedMapper
+
+    @property
+    def numROMBanks(self):
+        return self._numROMBanks
+
+    @property
+    def isNTSC(self):
+        return self._isNTSC
+
+    @property
+    def titleData(self):
+        return self._titleData
+
+    
     def __getFileContent(self):
         """Read file data into a var for later use."""
-        rom = open(self.fileName, "rb")
+        rom = open(self._fileName, "rb")
 
         try:            
-            self.__fileData = rom.read()
+            self._fileData = rom.read()
         finally:
             rom.close()
+    
 
     def readRom(self):
         """Reads in the rom and sets object state depending on header info"""
@@ -54,51 +91,51 @@ class NesRom:
         fieldOffsets = [0, 4, 5, 6, 7, 8, 9, 10]
         headerField1Expected = ord("N"), ord("E"), ord("S"), ord("\x1a")       
                 
-        if struct.unpack("BBBB", self.__fileData[fieldOffsets[0]:fieldOffsets[1]]) == headerField1Expected:        
-            self.isThisFormat = True
+        if struct.unpack("BBBB", self._fileData[fieldOffsets[0]:fieldOffsets[1]]) == headerField1Expected:        
+            self._isThisFormat = True
             
-            self.numPRGBanks = ord(self.__fileData[fieldOffsets[1]:fieldOffsets[2]])
-            self.__prgLength = self.numPRGBanks * self.PRG_PAGE_LENGTH
+            self._numPRGBanks = ord(self._fileData[fieldOffsets[1]:fieldOffsets[2]])
+            self._prgLength = self._numPRGBanks * self.PRG_PAGE_LENGTH
                 
-            self.numCHRBanks = ord(self.__fileData[fieldOffsets[2]:fieldOffsets[3]])
-            self.__chrLength = self.numCHRBanks * self.CHR_PAGE_LENGTH
+            self._numCHRBanks = ord(self._fileData[fieldOffsets[2]:fieldOffsets[3]])
+            self._chrLength = self._numCHRBanks * self.CHR_PAGE_LENGTH
             
-            field4 = str(ord(self.__fileData[fieldOffsets[3]:fieldOffsets[4]]))
-            self.mirroring = field4[0]
-            self.mapper = field4[1]
+            field4 = str(ord(self._fileData[fieldOffsets[3]:fieldOffsets[4]]))
+            self._mirroringValue = field4[0]
+            self._mapper = field4[1]
             
-            extendedMapper = str(ord(self.__fileData[fieldOffsets[4]:fieldOffsets[5]]))
+            _extendedMapper = str(ord(self._fileData[fieldOffsets[4]:fieldOffsets[5]]))
             
-            field6 = ord(self.__fileData[fieldOffsets[5]:fieldOffsets[6]])
-            self.numROMBanks = 1 if field6 == 0 else field6
+            field6 = ord(self._fileData[fieldOffsets[5]:fieldOffsets[6]])
+            self._numROMBanks = 1 if field6 == 0 else field6
             
-            self.isNTSC = ord(self.__fileData[fieldOffsets[6]:fieldOffsets[7]]) == 0
+            self._isNTSC = ord(self._fileData[fieldOffsets[6]:fieldOffsets[7]]) == 0
             
-            field8 = self.__fileData[fieldOffsets[7]:fieldOffsets[7]+6]
+            field8 = self._fileData[fieldOffsets[7]:fieldOffsets[7]+6]
             
             counter = 0
             while counter < 6:
                 if ord(field8[counter]) != 0:
-                    self.isThisFormat = False
+                    self._isThisFormat = False
                 counter += 1
 
             # Check for title data
-            otherStuff = self.HEADER_LENGTH + self.__prgLength + self.__chrLength
+            otherStuff = self.HEADER_LENGTH + self._prgLength + self._chrLength
             
-            if len(self.__fileData)-otherStuff == self.TITLE_DATA_LENGTH:
-                titleData = self.__fileData[otherStuff:]
+            if len(self._fileData) - otherStuff == self.TITLE_DATA_LENGTH:
+                _titleData = self._fileData[otherStuff:]
                 
                 counter = 0
-                while ord(titleData[counter]) != 0:
-                    self.titleData += titleData[counter]
+                while ord(_titleData[counter]) != 0:
+                    self._titleData += _titleData[counter]
                     counter += 1
         else:
-            self.isThisFormat = False
+            self._isThisFormat = False
 
 
     def getSprites(self):
         """This really isn't so good. Will come back to it later."""
-        rom = open(self.fileName, "rb")
+        rom = open(self._fileName, "rb")
 
         black = [0,0,0]
         red = [255,0,0]
@@ -108,10 +145,10 @@ class NesRom:
         spriteHeight = 8
         spriteWidth = 8
         
-        chrStart = self.__prgLength + self.HEADER_LENGTH
+        chrStart = self._prgLength + self.HEADER_LENGTH
         rom.seek(chrStart)
 
-        while rom.tell() < (self.HEADER_LENGTH + self.__prgLength + self.__chrLength):
+        while rom.tell() < (self.HEADER_LENGTH + self._prgLength + self._chrLength):
             sprite = rom.read(16)
                        
             data = np.zeros((spriteWidth,spriteHeight,3), dtype=np.uint8 )
