@@ -5,9 +5,14 @@ import struct
 
 class NesRom:
     
-    _headerLength = 16    
-    _prgLength = 0
-    _chrLength = 0
+    #constants
+    HEADER_LENGTH = 16    
+    PRG_PAGE_LENGTH = 16384
+    CHR_PAGE_LENGTH = 8192
+    TITLE_DATA_LENGTH = 128
+
+    __prgLength = 0
+    __chrLength = 0
 
     isThisFormat = True
     numPRGBanks = 0
@@ -47,20 +52,16 @@ class NesRom:
         #  Field 7: 1 byte: First bit: 1 for a PAL cartridge else NTSC. Other bits: zero
         #  Field 8: 6 bytes: All zeroes.
         fieldOffsets = [0, 4, 5, 6, 7, 8, 9, 10]
-        headerField1Expected = ord("N"), ord("E"), ord("S"), ord("\x1a")
-
-        prgPageLength = 16384
-        chrPageLength = 8192
-        titleDataLength = 128
+        headerField1Expected = ord("N"), ord("E"), ord("S"), ord("\x1a")       
                 
         if struct.unpack("BBBB", self.__fileData[fieldOffsets[0]:fieldOffsets[1]]) == headerField1Expected:        
             self.isThisFormat = True
             
             self.numPRGBanks = ord(self.__fileData[fieldOffsets[1]:fieldOffsets[2]])
-            self._prgLength = self.numPRGBanks * prgPageLength
+            self.__prgLength = self.numPRGBanks * self.PRG_PAGE_LENGTH
                 
             self.numCHRBanks = ord(self.__fileData[fieldOffsets[2]:fieldOffsets[3]])
-            self._chrLength = self.numCHRBanks * chrPageLength
+            self.__chrLength = self.numCHRBanks * self.CHR_PAGE_LENGTH
             
             field4 = str(ord(self.__fileData[fieldOffsets[3]:fieldOffsets[4]]))
             self.mirroring = field4[0]
@@ -82,9 +83,9 @@ class NesRom:
                 counter += 1
 
             # Check for title data
-            otherStuff = self._headerLength + self._prgLength + self._chrLength
+            otherStuff = self.HEADER_LENGTH + self.__prgLength + self.__chrLength
             
-            if len(self.__fileData)-otherStuff == titleDataLength:
+            if len(self.__fileData)-otherStuff == self.TITLE_DATA_LENGTH:
                 titleData = self.__fileData[otherStuff:]
                 
                 counter = 0
@@ -107,10 +108,10 @@ class NesRom:
         spriteHeight = 8
         spriteWidth = 8
         
-        chrStart = self._prgLength + self._headerLength
+        chrStart = self.__prgLength + self.HEADER_LENGTH
         rom.seek(chrStart)
 
-        while rom.tell() < (self._headerLength + self._prgLength + self._chrLength):
+        while rom.tell() < (self.HEADER_LENGTH + self.__prgLength + self.__chrLength):
             sprite = rom.read(16)
                        
             data = np.zeros((spriteWidth,spriteHeight,3), dtype=np.uint8 )
