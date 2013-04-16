@@ -5,8 +5,7 @@ import struct
 
 class NesRom:
     
-    _headerLength = 16
-    
+    _headerLength = 16    
     _prgLength = 0
     _chrLength = 0
 
@@ -18,13 +17,13 @@ class NesRom:
     extendedMapper = 0
     numROMBanks = 0
     isNTSC = True
+    titleData = ""
 
     fileName = ""
 
     def __init__(self, fileName):
         self.fileName = fileName
         self.__getFileContent()
-
 
     def __getFileContent(self):
         """Read file data into a var for later use."""
@@ -52,7 +51,8 @@ class NesRom:
 
         prgPageLength = 16384
         chrPageLength = 8192
-
+        titleDataLength = 128
+                
         if struct.unpack("BBBB", self.__fileData[fieldOffsets[0]:fieldOffsets[1]]) == headerField1Expected:        
             self.isThisFormat = True
             
@@ -80,9 +80,19 @@ class NesRom:
                 if ord(field8[counter]) != 0:
                     self.isThisFormat = False
                 counter += 1
+
+            # Check for title data
+            otherStuff = self._headerLength + self._prgLength + self._chrLength
+            
+            if len(self.__fileData)-otherStuff == titleDataLength:
+                titleData = self.__fileData[otherStuff:]
+                
+                counter = 0
+                while ord(titleData[counter])!=0:
+                    self.titleData += titleData[counter]
+                    counter += 1
         else:
             self.isThisFormat = False
-        
 
 
     def getSprites(self):

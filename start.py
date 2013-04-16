@@ -25,4 +25,10 @@ if a.isThisFormat:
 else:
     print "Something is wrong with the header."
 
+print "\n"
+print "Title data (if any): %s" % a.titleData
+
+
+
+
 
