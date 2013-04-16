@@ -4,7 +4,7 @@ import sys
 import nes
 from helpers import NesMappers as m
 
-if len(sys.argv)<2:
+if len(sys.argv) < 2:
     print "Usage: python start.py <rom filename>"
     sys.exit(0)
 

@@ -76,7 +76,7 @@ class NesRom:
             field8 = self.__fileData[fieldOffsets[7]:fieldOffsets[7]+6]
             
             counter = 0
-            while counter<6:
+            while counter < 6:
                 if ord(field8[counter]) != 0:
                     self.isThisFormat = False
                 counter += 1
@@ -88,7 +88,7 @@ class NesRom:
                 titleData = self.__fileData[otherStuff:]
                 
                 counter = 0
-                while ord(titleData[counter])!=0:
+                while ord(titleData[counter]) != 0:
                     self.titleData += titleData[counter]
                     counter += 1
         else:
