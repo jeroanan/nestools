@@ -5,83 +5,48 @@ class NesMappers:
         """Takes a number in and gives a textual description of the mapper concerned"""
         
         mapperDesc = "None";
+        
+        mappers = {"1": "Nintendo MMC1",
+                   "2": "CNROM switch",
+                   "3": "UNROM switch",
+                   "4": "Nintendo MMC3",
+                   "5": "Nintendo MMC5",
+                   "6": "FFE F4xxx",
+                   "7": "AOROM switch",
+                   "8": "FFE F3xxx",
+                   "9": "Nintendo MMC2",
+                   "10": "Nintendo MMC4",
+                   "11": "ColorDreams chip",
+                   "12": "- FFE F6xxx",
+                   "13": "CPROM switch",
+                   "15": "100-in-1 switch",
+                   "16": "Bandai chip",
+                   "17": "FFE F8xxx",
+                   "18": "Jaleco SS8806 chip",
+                   "19": "Namcot 106 chip",
+                   "20": "Nintendo DiskSystem",
+                   "21": "Konami VRC4a",
+                   "22": "Konami VRC2a",
+                   "23": "Konami VRC2a",
+                   "24": "Konami VRC6",
+                   "25": "Konami VRC4b",
+                   "32": "Irem G-101 chip",
+                   "33": "Taito TC0190/TC0350",
+                   "34": "Nina-1 board",
+                   "64": "Tengen RAMBO-1 chip",
+                   "65": "Irem H-3001 chip",
+                   "66": "GNROM switch",
+                   "67": "SunSoft3 chip",
+                   "68": "SunSoft4 chip",
+                   "69": "SunSoft5 FME-7 chip",
+                   "71": "Camerica chip",
+                   "78": "Irem 74HC161Irem 74HC161/32-based]]",
+                   "79": "AVE Nina-3 board",
+                   "81": "AVE Nina-6 board",
+                   "91": "Pirate HK-SF3 chip"}
 
-        if mapperNumber=="1": 
-            mapperDesc="Nintendo MMC1"
-        if mapperNumber=="2": 
-            mapperDesc="CNROM switch"
-        if mapperNumber=="3": 
-            mapperDesc="UNROM switch"
-        if mapperNumber=="4": 
-            mapperDesc="Nintendo MMC3"
-        if mapperNumber=="5": 
-            mapperDesc="Nintendo MMC5"
-        if mapperNumber=="6": 
-            mapperDesc="FFE F4xxx"
-        if mapperNumber=="7": 
-            mapperDesc="AOROM switch"
-        if mapperNumber=="8": 
-            mapperDesc="FFE F3xxx"
-        if mapperNumber=="9": 
-            mapperDesc="Nintendo MMC2"
-        if mapperNumber=="10": 
-            mapperDesc="Nintendo MMC4"
-        if mapperNumber=="11": 
-            mapperDesc="ColorDreams chip"
-        if mapperNumber=="12": 
-            mapperDesc="- FFE F6xxx"
-        if mapperNumber=="13": 
-            mapperDesc="CPROM switch"
-        if mapperNumber=="15": 
-            mapperDesc="100-in-1 switch"
-        if mapperNumber=="16": 
-            mapperDesc="Bandai chip"
-        if mapperNumber=="17": 
-            mapperDesc="FFE F8xxx"
-        if mapperNumber=="18": 
-            mapperDesc="Jaleco SS8806 chip"
-        if mapperNumber=="19": 
-            mapperDesc="Namcot 106 chip"
-        if mapperNumber=="20": 
-            mapperDesc="Nintendo DiskSystem"
-        if mapperNumber=="21": 
-            mapperDesc="Konami VRC4a"
-        if mapperNumber=="22": 
-            mapperDesc="Konami VRC2a"
-        if mapperNumber=="23": 
-            mapperDesc="Konami VRC2a"
-        if mapperNumber=="24": 
-            mapperDesc="Konami VRC6"
-        if mapperNumber=="25": 
-            mapperDesc="Konami VRC4b"
-        if mapperNumber=="32": 
-            mapperDesc="Irem G-101 chip"
-        if mapperNumber=="33": 
-            mapperDesc="Taito TC0190/TC0350"
-        if mapperNumber=="34": 
-            mapperDesc="Nina-1 board"
-        if mapperNumber=="64": 
-            mapperDesc="Tengen RAMBO-1 chip"
-        if mapperNumber=="65": 
-            mapperDesc="Irem H-3001 chip"
-        if mapperNumber=="66": 
-            mapperDesc="GNROM switch"
-        if mapperNumber=="67": 
-            mapperDesc="SunSoft3 chip"
-        if mapperNumber=="68": 
-            mapperDesc="SunSoft4 chip"
-        if mapperNumber=="69": 
-            mapperDesc="SunSoft5 FME-7 chip"
-        if mapperNumber=="71": 
-            mapperDesc="Camerica chip"
-        if mapperNumber=="78": 
-            mapperDesc="Irem 74HC161Irem 74HC161/32-based]]"
-        if mapperNumber=="79": 
-            mapperDesc="AVE Nina-3 board"
-        if mapperNumber=="81": 
-            mapperDesc="AVE Nina-6 board"
-        if mapperNumber=="91": 
-            mapperDesc="Pirate HK-SF3 chip "
+        if mappers.has_key(mapperNumber):
+            mapperDesc = mappers[mapperNumber]
       
         return mapperDesc
 
