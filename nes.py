@@ -26,43 +26,54 @@ class NesRom:
     _titleData = ""    
 
     def __init__(self, fileName):
+        """Initialise the object. This will cause the give rom 
+        to be read into memory."""
         self._fileName = fileName
         self.__getFileContent()
 
     @property
     def isThisFormat(self):
+        """True if on file load I have determined this to
+        be a NES rom based on its file header"""
         return self._isThisFormat
 
     @property
     def numPRGBanks(self):
+        """Number of 16KB Program Data banks"""
         return self._numPRGBanks
     
     @property
     def numCHRBanks(self):
+        """Number of 8KB Character Data banks"""
         return self._numCHRBanks
 
     @property
     def mirroringValue(self):
+        """The type of mirroring used"""
         return self._mirroringValue
 
     @property
     def mapper(self):
+        """The mapper used"""
         return self._mapper
 
     @property
-    def extendedMapper(self):
+    def extendedMapper(self):        
         return self._extendedMapper
 
     @property
     def numROMBanks(self):
+        """Number of additional 8KB rom banks"""
         return self._numROMBanks
 
     @property
     def isNTSC(self):
+        """If true this is an NTSC rom. If not it's PAL."""
         return self._isNTSC
 
     @property
     def titleData(self):
+        """Title metadata from the file footer"""
         return self._titleData
 
     
@@ -77,7 +88,7 @@ class NesRom:
     
 
     def readRom(self):
-        """Reads in the rom and sets object state depending on header info"""
+        """Sets the object state dpeending on what's found in file header/footer"""
 
         # The first 16 bytes in the file is header info:
         #  Field 1: 4 bytes: NES^Z
@@ -88,12 +99,18 @@ class NesRom:
         #  Field 6: 1 byte: Number of 8KB rom banks. If 0 then it's really 1.
         #  Field 7: 1 byte: First bit: 1 for a PAL cartridge else NTSC. Other bits: zero
         #  Field 8: 6 bytes: All zeroes.
+        #  ... program and sprite data ...
+        #  Final 128 bytes: title data if present
         fieldOffsets = [0, 4, 5, 6, 7, 8, 9, 10]
         headerField1Expected = ord("N"), ord("E"), ord("S"), ord("\x1a")       
-                
+            
+        # unpack first four bytes as chars to make sure the rom starts "NES^Z". 
+        # If it does then I say that this is a valid rom format file and 
+        # continue processing.
         if struct.unpack("BBBB", self._fileData[fieldOffsets[0]:fieldOffsets[1]]) == headerField1Expected:        
             self._isThisFormat = True
             
+            # _prgLength and _chrLength represent bytes.
             self._numPRGBanks = ord(self._fileData[fieldOffsets[1]:fieldOffsets[2]])
             self._prgLength = self._numPRGBanks * self.PRG_PAGE_LENGTH
                 
@@ -124,7 +141,8 @@ class NesRom:
             
             if len(self._fileData) - otherStuff == self.TITLE_DATA_LENGTH:
                 _titleData = self._fileData[otherStuff:]
-                
+            
+                # The title data is padded with ASCII 0s so we know where it ends.
                 counter = 0
                 while ord(_titleData[counter]) != 0:
                     self._titleData += _titleData[counter]
