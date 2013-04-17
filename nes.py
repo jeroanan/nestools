@@ -9,9 +9,6 @@ class Nes:
 
     _rom = ""
     _cpu = ""
-   
-    def INC(self):
-        print "boo"
 
     def PowerOn(self):
         """System boot"""
