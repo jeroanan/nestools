@@ -3,10 +3,12 @@ import struct
 import sys
 
 from rom import Rom
+from chip import NesCpu
 
 class Nes:
 
     _rom = ""
+    _cpu = ""
 
     OpCodes = {(0x00, 'BRK'),
 (0x01, 'ORA'),
@@ -160,16 +162,18 @@ class Nes:
 (0xFD, 'SBC'),
 (0xFE, 'INC') }
     
+    def INC(self):
+        print "boo"
+
     def PowerOn(self):
         """System boot"""
         if len(sys.argv) < 2:
             print "Usage: python nes.py <rom filename>"
             sys.exit(0)
 
+        self.cpu = NesCpu.NesCpu()
+            
         self._rom = Rom.Rom(sys.argv[1])
-
-        self._rom.readRom()
-    
 
 nes = Nes()
 nes.PowerOn()

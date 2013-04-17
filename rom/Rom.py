@@ -1,5 +1,6 @@
 import os
 import struct
+from array import array
 
 class Rom:
    
@@ -8,6 +9,8 @@ class Rom:
     PRG_PAGE_LENGTH = 16384
     CHR_PAGE_LENGTH = 8192
     TITLE_DATA_LENGTH = 128
+
+    _romData = array('B')
 
     _prgLength = 0
     _chrLength = 0
@@ -26,8 +29,15 @@ class Rom:
     def __init__(self, fileName):
         """Initialise the object. This will cause the given rom 
         to be read into memory."""        
-        self._fileName = fileName
-        self.__getFileContent()
+        try:
+            self._fileName = fileName
+            rom = open(fileName, "rb")
+            self._fileData = rom.read()            
+            self.readRom()
+            del self._fileData 
+            self.LoadRomIntoMemory(rom)
+        finally:
+            rom.close()
 
     @property
     def isThisFormat(self):
@@ -74,22 +84,6 @@ class Rom:
         """Title metadata from the file footer"""
         return self._titleData
 
-    
-    def __getFileContent(self):
-        """Read file data into a var for later use."""
-        rom = open(self._fileName, "rb")
-
-        try:            
-            self._fileData = rom.read()
-        finally:
-            rom.close()
-    
-
-    def release(self):
-        """Deletes the binary file from memory. Enables me to keep object state
-        without having biggish memory footprint."""
-        del self._fileData
-        
     def readRom(self):
         """Sets the object state dpeending on what's found in file header/footer"""
         # The first 16 bytes in the file is header info:
@@ -151,3 +145,7 @@ class Rom:
                     counter += 1
         else:
             self._isThisFormat = False
+
+    def LoadRomIntoMemory(self, rom):
+        rom.seek(16)
+        self._romData.fromfile(rom, self._prgLength)
