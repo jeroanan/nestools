@@ -171,9 +171,14 @@ class Nes:
             print "Usage: python nes.py <rom filename>"
             sys.exit(0)
 
-        self.cpu = NesCpu.NesCpu()
-            
         self._rom = Rom.Rom(sys.argv[1])
+        
+        self._cpu = NesCpu.NesCpu()
+        self._cpu.pc = 0x8000
 
+        print self._rom.RomData[self._cpu.pc]
+        
+        
+        
 nes = Nes()
 nes.PowerOn()
