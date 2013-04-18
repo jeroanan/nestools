@@ -153,5 +153,8 @@ class NesCpu:
 (0xFE, 'INC') }
 
     pc = 0x0
-
     y = 0
+
+    def executeNextCode(self, rom):
+        pass
+

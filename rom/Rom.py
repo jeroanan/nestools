@@ -10,7 +10,7 @@ class Rom:
     CHR_PAGE_LENGTH = 8192
     TITLE_DATA_LENGTH = 128
 
-    _romData = array('B')
+    RomData = array('B')
 
     _prgLength = 0
     _chrLength = 0
@@ -148,4 +148,4 @@ class Rom:
 
     def LoadRomIntoMemory(self, rom):
         rom.seek(16)
-        self._romData.fromfile(rom, self._prgLength)
+        self.RomData.fromfile(rom, self._prgLength)
