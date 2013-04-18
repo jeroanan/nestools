@@ -49,6 +49,11 @@ class TestDex(unittest.TestCase):
         self.cpu.dex()
         self.assertEqual(self.cpu.p & 0x2, 0)
 
+    def test_dex_processorStatusBit1ShouldBeUnsetAfterLoopRound(self):
+        self.cpu.x = 0
+        self.cpu.dex()
+        self.assertEqual(self.cpu.p & 0x2, 0)
+
     def test_dex_processorStatusBit2ShouldBeUnset(self):
         self.cpu.dex()
         self.assertEqual(self.cpu.p & 0x4, 0)
