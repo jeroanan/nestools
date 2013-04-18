@@ -19,11 +19,16 @@ class TestDex(unittest.TestCase):
         self.cpu.dex()
         self.assertEqual(self.cpu.a, 0)
         
-    def test_dex_x(self):
+    def test_dex_xreg(self):
         self.cpu.dex()
         self.assertEqual(self.cpu.x, 0)
 
-    def test_dex_y(self):
+    def test_dex_xregLoopsFromZero(self):
+        self.cpu.x = 0
+        self.cpu.dex()
+        self.assertEqual(self.cpu.x, 255)
+
+    def test_dex_yreg(self):
         self.cpu.dex()
         self.assertEqual(self.cpu.y, 1)
 
@@ -31,10 +36,42 @@ class TestDex(unittest.TestCase):
         self.cpu.dex()
         self.assertEqual(self.cpu.s, 0)
 
-    def test_dex_processorStatus(self):
+    def test_dex_processorStautsBit0ShouldBeUnset(self):
         self.cpu.dex()
-        self.assertEqual(self.cpu.p & 0x2, 0x2)
+        self.assertEqual(self.cpu.p & 0x0, 0)
 
+    def test_dex_processorStatusBit1ShouldBeSet(self):
+        self.cpu.dex()
+        self.assertEqual(self.cpu.p & 0x2, 2)
+
+    def test_dex_processorStatusBit1ShouldBeUnset(self):
+        self.cpu.x = 2
+        self.cpu.dex()
+        self.assertEqual(self.cpu.p & 0x2, 0)
+
+    def test_dex_processorStatusBit2ShouldBeUnset(self):
+        self.cpu.dex()
+        self.assertEqual(self.cpu.p & 0x4, 0)
+
+    def test_dex_processorStatusBit3ShouldBeUnset(self):
+        self.cpu.dex()
+        self.assertEqual(self.cpu.p & 0x8, 0)
+
+    def test_dex_processorStatusBit4ShouldBeUnset(self):
+        self.cpu.dex()
+        self.assertEqual(self.cpu.p & 0x16, 0)
+
+    def test_dex_processorStatusBit5ShouldBeUnset(self):
+        self.cpu.dex()
+        self.assertEqual(self.cpu.p & 0x32, 0)
+
+    def test_dex_processorStatusBit6ShouldBeUnset(self):
+        self.cpu.dex()
+        self.assertEqual(self.cpu.p & 0x64, 0)
+
+    def test_dex_processorStatusBit7ShouldBeUnset(self):
+        self.cpu.dex()
+        self.assertEqual(self.cpu.p & 0x128, 0)
 
 class TestNop(unittest.TestCase):
     
