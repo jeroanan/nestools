@@ -167,16 +167,19 @@ class NesCpu:
     
     
     # instruction processing
-    def dex(self):
-        """decrement x register. If after dec it is < 0 or >255 it 
-        needs to become 255 and 0 respectively. If it ends up as 0 we
-        set the Z flag"""
+    def clc(self):
+        """Clear the Processor Status Carry Flag"""
         pass
     def dey(self):
         """decrement y register. If after dec it is < 0 or >255 it 
         needs to become 255 and 0 respectively. If it ends up as 0 we
         set the Z flag"""
         pass
+    def dex(self):
+        """decrement x register. If after dec it is < 0 or >255 it 
+        needs to become 255 and 0 respectively. If it ends up as 0 we
+        set the Z flag"""
+        pass    
     def nop(self):
         """nop: no operation. do nothing."""
         pass

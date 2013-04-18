@@ -1,6 +1,73 @@
 import unittest
 import NesCpu
 
+class TestCLC(unittest.TestCase):
+    def setUp(self):
+        self.cpu = NesCpu.NesCpu()
+        self.cpu.pc = 0x0
+        self.cpu.a = 0
+        self.cpu.x = 0
+        self.cpu.y = 0
+        self.cpu.s = 0
+        self.cpu.p = 0xFF
+
+    def test_clc_progCounter(self):
+        self.cpu.clc()
+        self.assertEqual(self.cpu.pc, 0x0)
+
+    def test_clc_accumulator(self):
+        self.cpu.clc()
+        self.assertEqual(self.cpu.a, 0)
+
+    def test_clc_xreg(self):
+        self.cpu.clc()
+        self.assertEqual(self.cpu.x, 0)
+
+    def test_clc_xregLoopsFromZero(self):
+        self.cpu.x = 0
+        self.cpu.clc()
+        self.assertEqual(self.cpu.x, 0)
+
+    def test_clc_yreg(self):
+        self.cpu.clc()
+        self.assertEqual(self.cpu.y, 0)
+
+    def test_clc_stackPointer(self):
+        self.cpu.clc()
+        self.assertEqual(self.cpu.s, 0)
+
+    def test_clc_processorStautsBit0ShouldBeUnset(self):
+        self.cpu.clc()
+        self.assertEqual(self.cpu.p & (1 << 0), 0)
+
+    def test_clc_processorStatusBit1ShouldBeSet(self):
+        self.cpu.clc()
+        self.assertEqual(self.cpu.p & (1 << 1), 2)
+
+    def test_clc_processorStatusBit2ShouldBeSet(self):
+        self.cpu.clc()
+        self.assertEqual(self.cpu.p & (1 << 2), 4)
+
+    def test_clc_processorStatusBit3ShouldBeSet(self):
+        self.cpu.clc()
+        self.assertEqual(self.cpu.p & (1 << 3), 8)
+
+    def test_clc_processorStatusBit4ShouldBeSet(self):
+        self.cpu.clc()
+        self.assertEqual(self.cpu.p & (1 << 4), 16)
+
+    def test_clc_processorStatusBit5ShouldBeSet(self):
+        self.cpu.clc()
+        self.assertEqual(self.cpu.p & (1 << 5), 32)
+
+    def test_clc_processorStatusBit6ShouldBeSet(self):
+        self.cpu.clc()
+        self.assertEqual(self.cpu.p & (1 << 6), 64)
+
+    def test_clc_processorStatusBit7ShouldBeSet(self):
+        self.cpu.clc()
+        self.assertEqual(self.cpu.p & (1 << 7), 128)                                                 
+
 class TestDex(unittest.TestCase):
     def setUp(self):
         self.cpu = NesCpu.NesCpu()
@@ -38,45 +105,45 @@ class TestDex(unittest.TestCase):
 
     def test_dex_processorStautsBit0ShouldBeUnset(self):
         self.cpu.dex()
-        self.assertEqual(self.cpu.p & 0x0, 0)
+        self.assertEqual(self.cpu.p & (1 << 0), 0)
 
     def test_dex_processorStatusBit1ShouldBeSet(self):
         self.cpu.dex()
-        self.assertEqual(self.cpu.p & 0x2, 2)
+        self.assertEqual(self.cpu.p & (1 << 1), 2)
 
     def test_dex_processorStatusBit1ShouldBeUnset(self):
         self.cpu.x = 2
         self.cpu.dex()
-        self.assertEqual(self.cpu.p & 0x2, 0)
+        self.assertEqual(self.cpu.p & (1 << 1), 0)
 
     def test_dex_processorStatusBit1ShouldBeUnsetAfterLoopRound(self):
         self.cpu.x = 0
         self.cpu.dex()
-        self.assertEqual(self.cpu.p & 0x2, 0)
+        self.assertEqual(self.cpu.p & (1 << 1), 0)
 
     def test_dex_processorStatusBit2ShouldBeUnset(self):
         self.cpu.dex()
-        self.assertEqual(self.cpu.p & 0x4, 0)
+        self.assertEqual(self.cpu.p & (1 << 2), 0)
 
     def test_dex_processorStatusBit3ShouldBeUnset(self):
         self.cpu.dex()
-        self.assertEqual(self.cpu.p & 0x8, 0)
+        self.assertEqual(self.cpu.p & (1 << 3), 0)
 
     def test_dex_processorStatusBit4ShouldBeUnset(self):
         self.cpu.dex()
-        self.assertEqual(self.cpu.p & 0x16, 0)
+        self.assertEqual(self.cpu.p & (1 << 4), 0)
 
     def test_dex_processorStatusBit5ShouldBeUnset(self):
         self.cpu.dex()
-        self.assertEqual(self.cpu.p & 0x32, 0)
+        self.assertEqual(self.cpu.p & (1 << 5), 0)
 
     def test_dex_processorStatusBit6ShouldBeUnset(self):
         self.cpu.dex()
-        self.assertEqual(self.cpu.p & 0x64, 0)
+        self.assertEqual(self.cpu.p & (1 << 6), 0)
 
     def test_dex_processorStatusBit7ShouldBeUnset(self):
         self.cpu.dex()
-        self.assertEqual(self.cpu.p & 0x128, 0)
+        self.assertEqual(self.cpu.p & (1 << 7), 0)
 
 class TestDey(unittest.TestCase):
     def setUp(self):
@@ -115,45 +182,45 @@ class TestDey(unittest.TestCase):
 
     def test_dey_processorStautsBit0ShouldBeUnset(self):
         self.cpu.dey()
-        self.assertEqual(self.cpu.p & 0x0, 0)
+        self.assertEqual(self.cpu.p & (1 << 0), 0)
 
     def test_dey_processorStatusBit1ShouldBeSet(self):
         self.cpu.dey()
-        self.assertEqual(self.cpu.p & 0x2, 2)
+        self.assertEqual(self.cpu.p & (1 << 1), 2)
 
     def test_dey_processorStatusBit1ShouldBeUnset(self):
         self.cpu.y = 2
         self.cpu.dey()
-        self.assertEqual(self.cpu.p & 0x2, 0)
+        self.assertEqual(self.cpu.p & (1 << 1), 0)
 
     def test_dey_processorStatusBit1ShouldBeUnsetAfterLoopRound(self):
         self.cpu.y = 0
         self.cpu.dey()
-        self.assertEqual(self.cpu.p & 0x2, 0)
+        self.assertEqual(self.cpu.p & (1 << 1), 0)
 
     def test_dey_processorStatusBit2ShouldBeUnset(self):
         self.cpu.dey()
-        self.assertEqual(self.cpu.p & 0x4, 0)
+        self.assertEqual(self.cpu.p & (1 << 2), 0)
 
     def test_dey_processorStatusBit3ShouldBeUnset(self):
         self.cpu.dey()
-        self.assertEqual(self.cpu.p & 0x8, 0)
+        self.assertEqual(self.cpu.p & (1 << 3), 0)
 
     def test_dey_processorStatusBit4ShouldBeUnset(self):
         self.cpu.dey()
-        self.assertEqual(self.cpu.p & 0x16, 0)
+        self.assertEqual(self.cpu.p & (1 << 4), 0)
 
     def test_dey_processorStatusBit5ShouldBeUnset(self):
         self.cpu.dey()
-        self.assertEqual(self.cpu.p & 0x32, 0)
+        self.assertEqual(self.cpu.p & (1 << 5), 0)
 
     def test_dey_processorStatusBit6ShouldBeUnset(self):
         self.cpu.dey()
-        self.assertEqual(self.cpu.p & 0x64, 0)
+        self.assertEqual(self.cpu.p & (1 << 6), 0)
 
     def test_dey_processorStatusBit7ShouldBeUnset(self):
         self.cpu.dey()
-        self.assertEqual(self.cpu.p & 0x128, 0)
+        self.assertEqual(self.cpu.p & (1 << 7), 0)
 
 class TestNop(unittest.TestCase):
     
@@ -184,7 +251,7 @@ class TestNop(unittest.TestCase):
 
     def test_nop_processorStatus(self):
         self.cpu.nop()
-        self.assertEqual(self.cpu.p & 0x0, 0x0)
+        self.assertEqual(self.cpu.p, 0x0)
 
 if __name__=="__main__":
     unittest.main()
