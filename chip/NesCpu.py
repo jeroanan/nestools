@@ -175,12 +175,12 @@ class NesCpu:
     def dey(self):
         """decrement y register. If after dec it is < 0 or >255 it 
         needs to become 255 and 0 respectively. If it ends up as 0 we
-        set the Z flag"""
+        set the Z flag. Set N flag if bit 7 of the result == 1"""
         pass
     def dex(self):
         """decrement x register. If after dec it is < 0 or >255 it 
         needs to become 255 and 0 respectively. If it ends up as 0 we
-        set the Z flag"""
+        set the Z flag. Set N flag if bit 7 of the result == 1"""
         pass    
     def nop(self):
         """nop: no operation. do nothing."""

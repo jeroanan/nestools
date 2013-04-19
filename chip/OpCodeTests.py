@@ -212,6 +212,11 @@ class TestDex(unittest.TestCase):
         self.cpu.dex()
         self.assertEqual(self.cpu.p & (1 << 7), 0)
 
+    def test_dex_processorStatusBit7ShouldBeSet(self):
+        self.cpu.x = 0
+        self.cpu.dex()
+        self.assertEqual(self.cpu.p & (1 << 7), 128)
+
 class TestDey(unittest.TestCase):
     def setUp(self):
         self.cpu = NesCpu.NesCpu()
@@ -288,6 +293,11 @@ class TestDey(unittest.TestCase):
     def test_dey_processorStatusBit7ShouldBeUnset(self):
         self.cpu.dey()
         self.assertEqual(self.cpu.p & (1 << 7), 0)
+
+    def test_dex_processorStatusBit7ShouldBeSet(self):
+        self.cpu.y = 0
+        self.cpu.dey()
+        self.assertEqual(self.cpu.p & (1 << 7), 128)
 
 class TestNop(unittest.TestCase):
     
