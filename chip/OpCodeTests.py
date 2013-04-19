@@ -68,6 +68,73 @@ class TestCLC(unittest.TestCase):
         self.cpu.clc()
         self.assertEqual(self.cpu.p & (1 << 7), 128)                                                 
 
+class TestSEC(unittest.TestCase):
+    def setUp(self):
+        self.cpu = NesCpu.NesCpu()
+        self.cpu.pc = 0x0
+        self.cpu.a = 0
+        self.cpu.x = 0
+        self.cpu.y = 0
+        self.cpu.s = 0
+        self.cpu.p = 0x00
+
+    def test_sec_progCounter(self):
+        self.cpu.sec()
+        self.assertEqual(self.cpu.pc, 0x0)
+
+    def test_sec_accumulator(self):
+        self.cpu.sec()
+        self.assertEqual(self.cpu.a, 0)
+
+    def test_sec_xreg(self):
+        self.cpu.sec()
+        self.assertEqual(self.cpu.x, 0)
+
+    def test_sec_xregLoopsFromZero(self):
+        self.cpu.x = 0
+        self.cpu.sec()
+        self.assertEqual(self.cpu.x, 0)
+
+    def test_sec_yreg(self):
+        self.cpu.sec()
+        self.assertEqual(self.cpu.y, 0)
+
+    def test_sec_stackPointer(self):
+        self.cpu.sec()
+        self.assertEqual(self.cpu.s, 0)        
+
+    def test_sec_processorStautsBit0ShouldBeSet(self):
+        self.cpu.clc()
+        self.assertEqual(self.cpu.p & (1 << 0), 1)
+
+    def test_sec_processorStatusBit1ShouldBeUnSet(self):
+        self.cpu.clc()
+        self.assertEqual(self.cpu.p & (1 << 1), 0)
+
+    def test_sec_processorStatusBit2ShouldBeUnset(self):
+        self.cpu.clc()
+        self.assertEqual(self.cpu.p & (1 << 2), 0)
+
+    def test_sec_processorStatusBit3ShouldBeUnset(self):
+        self.cpu.clc()
+        self.assertEqual(self.cpu.p & (1 << 3), 0)
+
+    def test_sec_processorStatusBit4ShouldBeUnset(self):
+        self.cpu.clc()
+        self.assertEqual(self.cpu.p & (1 << 4), 0)
+
+    def test_sec_processorStatusBit5ShouldBeUnset(self):
+        self.cpu.clc()
+        self.assertEqual(self.cpu.p & (1 << 5), 0)
+
+    def test_sec_processorStatusBit6ShouldBeUnset(self):
+        self.cpu.clc()
+        self.assertEqual(self.cpu.p & (1 << 6), 0)
+
+    def test_sec_processorStatusBit7ShouldBeUnset(self):
+        self.cpu.clc()
+        self.assertEqual(self.cpu.p & (1 << 7), 0)
+
 class TestDex(unittest.TestCase):
     def setUp(self):
         self.cpu = NesCpu.NesCpu()

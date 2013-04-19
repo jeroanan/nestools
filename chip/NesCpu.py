@@ -151,7 +151,7 @@ class NesCpu:
                (0xF8, 'SED'),
                (0xF9, 'SBC'),
                (0xFD, 'SBC'),
-               (0xFE, 'INC') }
+               (0xFE, 'INC')}
     
     pc = 0x0 # program counter
     
@@ -164,11 +164,13 @@ class NesCpu:
     
     def executeNextCode(self, rom):
         pass
-    
-    
+  
     # instruction processing
     def clc(self):
         """Clear the Processor Status Carry Flag"""
+        pass
+    def sec(self):
+        """Set the Processor Status Carry Flag"""
         pass
     def dey(self):
         """decrement y register. If after dec it is < 0 or >255 it 
@@ -183,8 +185,3 @@ class NesCpu:
     def nop(self):
         """nop: no operation. do nothing."""
         pass
-    
-    
-    
-
-
