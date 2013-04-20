@@ -135,6 +135,88 @@ class TestSEC(unittest.TestCase):
         self.cpu.clc()
         self.assertEqual(self.cpu.p & (1 << 7), 0)
 
+class TestIny(unittest.TestCase):
+    def setUp(self):
+        self.cpu = NesCpu.NesCpu()
+        self.cpu.pc = 0x0
+        self.cpu.a = 0
+        self.cpu.x = 1
+        self.cpu.y = 1
+        self.cpu.s = 0
+        self.cpu.p = 0x0
+
+    def test_iny_progCounter(self):
+        self.cpu.iny()
+        self.assertEqual(self.cpu.pc, 0x0)
+
+    def test_iny_accumulator(self):
+        self.cpu.iny()
+        self.assertEqual(self.cpu.a, 0)
+        
+    def test_iny_xreg(self):
+        self.cpu.iny()
+        self.assertEqual(self.cpu.x, 1)    
+
+    def test_iny_yreg(self):
+        self.cpu.iny()
+        self.assertEqual(self.cpu.y, 2)
+
+    def test_iny_yregLoopsFromMax(self):
+        self.cpu.y = 255
+        self.cpu.iny()
+        self.assertEqual(self.cpu.y, 0)
+
+    def test_iny_stackPointer(self):
+        self.cpu.iny()
+        self.assertEqual(self.cpu.s, 0)
+
+    def test_iny_processorStautsBit0ShouldBeUnset(self):
+        self.cpu.iny()
+        self.assertEqual(self.cpu.p & (1 << 0), 0)
+
+    def test_iny_processorStatusBit1ShouldBeSet(self):
+        self.cpu.iny()
+        self.assertEqual(self.cpu.p & (1 << 1), 2)
+
+    def test_iny_processorStatusBit1ShouldBeUnset(self):
+        self.cpu.y = 1
+        self.cpu.iny()
+        self.assertEqual(self.cpu.p & (1 << 1), 0)
+
+    def test_iny_processorStatusBit1ShouldBeSetAfterLoopRound(self):
+        self.cpu.y = 255
+        self.cpu.iny()
+        self.assertEqual(self.cpu.p & (1 << 1), 1)
+
+    def test_iny_processorStatusBit2ShouldBeUnset(self):
+        self.cpu.iny()
+        self.assertEqual(self.cpu.p & (1 << 2), 0)
+
+    def test_iny_processorStatusBit3ShouldBeUnset(self):
+        self.cpu.iny()
+        self.assertEqual(self.cpu.p & (1 << 3), 0)
+
+    def test_iny_processorStatusBit4ShouldBeUnset(self):
+        self.cpu.iny()
+        self.assertEqual(self.cpu.p & (1 << 4), 0)
+
+    def test_iny_processorStatusBit5ShouldBeUnset(self):
+        self.cpu.iny()
+        self.assertEqual(self.cpu.p & (1 << 5), 0)
+
+    def test_iny_processorStatusBit6ShouldBeUnset(self):
+        self.cpu.iny()
+        self.assertEqual(self.cpu.p & (1 << 6), 0)
+
+    def test_iny_processorStatusBit7ShouldBeUnset(self):
+        self.cpu.iny()
+        self.assertEqual(self.cpu.p & (1 << 7), 0)
+
+    def test_iny_processorStatusBit7ShouldBeSet(self):
+        self.cpu.x = 254
+        self.cpu.iny()
+        self.assertEqual(self.cpu.p & (1 << 7), 128)
+
 class TestDex(unittest.TestCase):
     def setUp(self):
         self.cpu = NesCpu.NesCpu()
