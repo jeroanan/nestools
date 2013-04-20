@@ -138,6 +138,80 @@ class TestSEC(unittest.TestCase):
         self.cpu.clc()
         self.assertEqual(self.cpu.p & (1 << 7), 0)
 
+class TestTAY(unittest.TestCase):
+    def setUp(self):
+        self.cpu = NesCpu.NesCpu()
+        self.cpu.pc = 0x0
+        self.cpu.a = 1
+        self.cpu.x =	0
+        self.cpu.y = 0
+        self.cpu.s = 0
+        self.cpu.p = 0xFF
+
+    def test_tay_progCounter(self):
+        self.cpu.tay()
+        self.assertEqual(self.cpu.pc, 0x0)
+
+    def test_tay_accumulator(self):
+        self.cpu.tay()
+        self.assertEqual(self.cpu.a, 0)
+
+    def test_tay_xreg(self):
+        self.cpu.tay()
+        self.assertEqual(self.cpu.x, 0)
+
+    def test_tay_yreg(self):
+        self.cpu.tay()
+        self.assertEqual(self.cpu.y, 1)
+
+    def test_tay_stackPointer(self):
+        self.cpu.tay()
+        self.assertEqual(self.cpu.s, 0)
+
+    def test_tay_processorStautsBit0ShouldBeSet(self):
+        self.cpu.tay()
+        self.assertEqual(self.cpu.p & (1 << 0), 1)
+    
+    def test_tay_processorStatusBit1ShouldBeSet(self):
+        self.cpu.a = 1
+        self.cpu.tay()
+        self.assertEqual(self.cpu.p & (1 << 1), 0)
+
+    def test_tay_processorStatusBit1ShouldBeSet(self):
+        self.cpu.a = 0
+        self.cpu.tay()
+        self.assertEqual(self.cpu.p & (1 << 1), 2)
+
+    def test_tay_processorStatusBit2ShouldBeSet(self):
+        self.cpu.tay()
+        self.assertEqual(self.cpu.p & (1 << 2), 4)
+
+    def test_tay_processorStatusBit3ShouldBeSet(self):
+        self.cpu.tay()
+        self.assertEqual(self.cpu.p & (1 << 3), 8)
+
+    def test_tay_processorStatusBit4ShouldBeSet(self):
+        self.cpu.tay()
+        self.assertEqual(self.cpu.p & (1 << 4), 16)
+
+    def test_tay_processorStatusBit5ShouldBeSet(self):
+        self.cpu.tay()
+        self.assertEqual(self.cpu.p & (1 << 5), 32)
+
+    def test_tay_processorStatusBit6ShouldBeSet(self):
+        self.cpu.tay()
+        self.assertEqual(self.cpu.p & (1 << 6), 64)
+
+    def test_tay_processorStatusBit7ShouldBeSet(self):
+        self.cpu.a = 255
+        self.cpu.tay()
+        self.assertEqual(self.cpu.p & (1 << 7), 128)                                                 
+
+    def test_tay_processorStatusBit7ShouldBeUnSet(self):
+        self.cpu.a = 1
+        self.cpu.tay()
+        self.assertEqual(self.cpu.p & (1 << 7), 0)  
+
 class TestTAX(unittest.TestCase):
     def setUp(self):
         self.cpu = NesCpu.NesCpu()
