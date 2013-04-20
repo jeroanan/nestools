@@ -138,6 +138,81 @@ class TestSEC(unittest.TestCase):
         self.cpu.clc()
         self.assertEqual(self.cpu.p & (1 << 7), 0)
 
+class TestTAX(unittest.TestCase):
+    def setUp(self):
+        self.cpu = NesCpu.NesCpu()
+        self.cpu.pc = 0x0
+        self.cpu.a = 1
+        self.cpu.x =	0
+        self.cpu.y = 0
+        self.cpu.s = 0
+        self.cpu.p = 0xFF
+
+    def test_tax_progCounter(self):
+        self.cpu.tax()
+        self.assertEqual(self.cpu.pc, 0x0)
+
+    def test_tax_accumulator(self):
+        self.cpu.tax()
+        self.assertEqual(self.cpu.a, 0)
+
+    def test_tax_xreg(self):
+        self.cpu.tax()
+        self.assertEqual(self.cpu.x, 1)
+
+    def test_tax_yreg(self):
+        self.cpu.tax()
+        self.assertEqual(self.cpu.y, 0)
+
+    def test_tax_stackPointer(self):
+        self.cpu.tax()
+        self.assertEqual(self.cpu.s, 0)
+
+    def test_tax_processorStautsBit0ShouldBeSet(self):
+        self.cpu.tax()
+        self.assertEqual(self.cpu.p & (1 << 0), 1)
+    
+    def test_tax_processorStatusBit1ShouldBeSet(self):
+        self.cpu.a = 1
+        self.cpu.tax()
+        self.assertEqual(self.cpu.p & (1 << 1), 0)
+
+    def test_tax_processorStatusBit1ShouldBeSet(self):
+        self.cpu.a = 0
+        self.cpu.tax()
+        self.assertEqual(self.cpu.p & (1 << 1), 2)
+
+    def test_tax_processorStatusBit2ShouldBeSet(self):
+        self.cpu.tax()
+        self.assertEqual(self.cpu.p & (1 << 2), 4)
+
+    def test_tax_processorStatusBit3ShouldBeSet(self):
+        self.cpu.tax()
+        self.assertEqual(self.cpu.p & (1 << 3), 8)
+
+    def test_tax_processorStatusBit4ShouldBeSet(self):
+        self.cpu.tax()
+        self.assertEqual(self.cpu.p & (1 << 4), 16)
+
+    def test_tax_processorStatusBit5ShouldBeSet(self):
+        self.cpu.tax()
+        self.assertEqual(self.cpu.p & (1 << 5), 32)
+
+    def test_tax_processorStatusBit6ShouldBeSet(self):
+        self.cpu.tax()
+        self.assertEqual(self.cpu.p & (1 << 6), 64)
+
+    def test_tax_processorStatusBit7ShouldBeSet(self):
+        self.cpu.a = 255
+        self.cpu.tax()
+        self.assertEqual(self.cpu.p & (1 << 7), 128)                                                 
+
+    def test_tax_processorStatusBit7ShouldBeUnSet(self):
+        self.cpu.a = 1
+        self.cpu.tax()
+        self.assertEqual(self.cpu.p & (1 << 7), 0)  
+
+
 class TestIny(unittest.TestCase):
     def setUp(self):
         self.cpu = NesCpu.NesCpu()
