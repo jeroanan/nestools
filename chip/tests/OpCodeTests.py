@@ -1,4 +1,7 @@
+import sys
 import unittest
+
+sys.path.append("..")
 import NesCpu
 
 class TestCLC(unittest.TestCase):
