@@ -177,6 +177,14 @@ class NesCpu:
         needs to become 255 and 0 respectively. If it ends up as 0 we
         set the Z flag. Set N flag if bit 7 of the result == 1"""
         pass
+    def txa(self):
+        """Transfer the x register to the accumulator. If the value is 0,
+        set the Z flag. If bit 7 is 1, set N."""
+        pass
+    def tya(self):
+        """Transfer the y register to the accumulator. If the value is 0,
+        set the Z flag. If bit 7 is 1, set N."""
+        pass
     def tay(self):
         """Transfer the accumulator to the y register. If the value is 0,
         set the Z flag. If bit 7 is 1, set N."""

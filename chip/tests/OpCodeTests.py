@@ -138,6 +138,80 @@ class TestSEC(unittest.TestCase):
         self.cpu.clc()
         self.assertEqual(self.cpu.p & (1 << 7), 0)
 
+class TestTYA(unittest.TestCase):
+    def setUp(self):
+        self.cpu = NesCpu.NesCpu()
+        self.cpu.pc = 0x0
+        self.cpu.a = 0
+        self.cpu.x = 0
+        self.cpu.y = 1
+        self.cpu.s = 0
+        self.cpu.p = 0xFF
+        
+    def test_tya_progCounter(self):
+        self.cpu.tya()
+        self.assertEqual(self.cpu.pc, 0x0)
+
+    def test_tya_accumulator(self):
+        self.cpu.tya()
+        self.assertEqual(self.cpu.a, 1)
+
+    def test_tya_xreg(self):
+        self.cpu.tya()
+        self.assertEqual(self.cpu.x, 0)
+
+    def test_tya_yreg(self):
+        self.cpu.tya()
+        self.assertEqual(self.cpu.y, 1)
+
+    def test_tya_stackPointer(self):
+        self.cpu.tya()
+        self.assertEqual(self.cpu.s, 0)
+
+    def test_tya_processorStautsBit0ShouldBeSet(self):
+        self.cpu.tya()
+        self.assertEqual(self.cpu.p & (1 << 0), 1)
+    
+    def test_tya_processorStatusBit1ShouldBeUnSet(self):
+        self.cpu.y = 1
+        self.cpu.tya()
+        self.assertEqual(self.cpu.p & (1 << 1), 0)
+
+    def test_tya_processorStatusBit1ShouldBeSet(self):
+        self.cpu.y = 0
+        self.cpu.tya()
+        self.assertEqual(self.cpu.p & (1 << 1), 2)
+
+    def test_tya_processorStatusBit2ShouldBeSet(self):
+        self.cpu.tya()
+        self.assertEqual(self.cpu.p & (1 << 2), 4)
+
+    def test_tya_processorStatusBit3ShouldBeSet(self):
+        self.cpu.tya()
+        self.assertEqual(self.cpu.p & (1 << 3), 8)
+
+    def test_tya_processorStatusBit4ShouldBeSet(self):
+        self.cpu.tya()
+        self.assertEqual(self.cpu.p & (1 << 4), 16)
+
+    def test_tya_processorStatusBit5ShouldBeSet(self):
+        self.cpu.tya()
+        self.assertEqual(self.cpu.p & (1 << 5), 32)
+
+    def test_tya_processorStatusBit6ShouldBeSet(self):
+        self.cpu.tya()
+        self.assertEqual(self.cpu.p & (1 << 6), 64)
+
+    def test_tya_processorStatusBit7ShouldBeSet(self):
+        self.cpu.y = 255
+        self.cpu.tya()
+        self.assertEqual(self.cpu.p & (1 << 7), 128)                                                 
+
+    def test_tya_processorStatusBit7ShouldBeUnSet(self):
+        self.cpu.y = 1
+        self.cpu.tya()
+        self.assertEqual(self.cpu.p & (1 << 7), 0)      
+
 class TestTAY(unittest.TestCase):
     def setUp(self):
         self.cpu = NesCpu.NesCpu()
