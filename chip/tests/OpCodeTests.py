@@ -82,6 +82,40 @@ class TestSEC(unittest.TestCase):
         self.cpu.clc()
         self.assertEqual(self.cpu.p, 0x1)
 
+class TestSEI(unittest.TestCase):
+    def setUp(self):
+        self.cpu = NesCpu.NesCpu()
+        self.cpu.pc = 0x0
+        self.cpu.a = 0
+        self.cpu.x = 0
+        self.cpu.y = 0
+        self.cpu.s = 0
+        self.cpu.p = 0x0        
+
+    def test_sei_progCounter(self):
+        self.cpu.sei()
+        self.assertEqual(self.cpu.pc, 0x0)
+
+    def test_sei_accumulator(self):
+        self.cpu.sei()
+        self.assertEqual(self.cpu.a, 0)
+        
+    def test_sei_xreg(self):
+        self.cpu.sei()
+        self.assertEqual(self.cpu.x, 0)
+
+    def test_sei_yreg(self):
+        self.cpu.sei()
+        self.assertEqual(self.cpu.y, 0)
+
+    def test_sei_stackPointer(self):
+        self.cpu.sei()
+        self.assertEqual(self.cpu.s, 0)
+
+    def test_sei_processorStatus(self):
+        self.cpu.sei()
+        self.assertEqual(self.cpu.p, 0x4)
+
 class TestCLI(unittest.TestCase):
     def setUp(self):
         self.cpu = NesCpu.NesCpu()

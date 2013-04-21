@@ -169,6 +169,9 @@ class NesCpu(object):
     def sec(self):
         """Set the Processor Status Carry Flag"""
         pass
+    def sei(self):
+        """Sets the Processor Status Interrupt Disable Flag"""
+        pass
     def cli(self):
         """Clear the Processor Status Interrupt Disable Flag"""
         pass
