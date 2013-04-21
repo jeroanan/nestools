@@ -704,5 +704,4 @@ class TestNop(unittest.TestCase):
         self.cpu.nop()
         self.assertEqual(self.cpu.p, 0x0)
 
-if __name__=="__main__":
-    unittest.main()
+unittest.main()
