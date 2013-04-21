@@ -160,8 +160,7 @@ class NesCpu(object):
     x = 0   # x register
     y = 0   # y register
     s = 0   # stack pointer
-    p = 0x0 # processor status
-    
+    p = 0x0 # processor status    
     
     def executeNextCode(self, rom):
         pass
@@ -172,6 +171,9 @@ class NesCpu(object):
         pass
     def sec(self):
         """Set the Processor Status Carry Flag"""
+        pass
+    def cli(self):
+        """Clear the Processor Status Interrupt Disable Flag"""
         pass
     def dey(self):
         """decrement y register. If after dec it is < 0 or >255 it 
