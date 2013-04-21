@@ -210,6 +210,9 @@ class NesCpu(object):
         needs to become 255 and 0 respectively. If it ends up as 0 we
         set the Z flag. Set N flag if bit 7 of the result == 1"""
         pass    
+    def cld(self):
+        """Clear processor decimal mode status flag"""        
+        pass
     def nop(self):
         """nop: no operation. do nothing."""
         pass

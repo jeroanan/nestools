@@ -740,6 +740,40 @@ class TestDey(unittest.TestCase):
         self.cpu.dey()
         self.assertEqual(self.cpu.p & (1 << 7), 128)
 
+class TestCLD(unittest.TestCase):
+    def setUp(self):
+        self.cpu = NesCpu.NesCpu()
+        self.cpu.pc = 0x0
+        self.cpu.a = 0
+        self.cpu.x = 0
+        self.cpu.y = 0
+        self.cpu.s = 0
+        self.cpu.p = 0x8
+
+    def test_cld_progCounter(self):
+        self.cpu.cld()
+        self.assertEqual(self.cpu.pc, 0x0)
+
+    def test_cld_accumulator(self):
+        self.cpu.cld()
+        self.assertEqual(self.cpu.a, 0)
+        
+    def test_cld_xreg(self):
+        self.cpu.cld()
+        self.assertEqual(self.cpu.x, 0)
+
+    def test_cld_yreg(self):
+        self.cpu.cld()
+        self.assertEqual(self.cpu.y, 0)
+
+    def test_cld_stackPointer(self):
+        self.cpu.cld()
+        self.assertEqual(self.cpu.s, 0)
+
+    def test_cld_processorStatus(self):
+        self.cpu.cld()
+        self.assertEqual(self.cpu.p, 0x0)
+
 class TestNop(unittest.TestCase):
     
     def setUp(self):
@@ -771,4 +805,5 @@ class TestNop(unittest.TestCase):
         self.cpu.nop()
         self.assertEqual(self.cpu.p, 0x0)
 
-unittest.main()
+if __name__=="main":
+    unittest.main()
