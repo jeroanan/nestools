@@ -510,6 +510,50 @@ class TestDey(unittest.TestCase):
         self.cpu.dey()
         self.assertEqual(self.cpu.p, 0x80)
 
+class TestTXA(unittest.TestCase):
+    def setUp(self):
+        self.cpu = NesCpu.NesCpu()
+        self.cpu.pc = 0x0
+        self.cpu.a = 0
+        self.cpu.x = 1
+        self.cpu.y = 0
+        self.cpu.s = 0
+        self.cpu.p = 0x0
+
+    def test_txa_procCounter(self):
+        self.cpu.txa()
+        self.assertEqual(self.cpu.pc, 0x0)
+
+    def test_txa_accumulator(self):
+        self.cpu.txa()
+        self.assertEqual(self.cpu.a, 1)
+
+    def test_txa_xreg(self):
+        self.cpu.txa()
+        self.assertEqual(self.cpu.x, 1)
+
+    def test_txa_yreg(self):
+        self.cpu.txa()
+        self.assertEqual(self.cpu.y, 0)
+
+    def test_txa_stackPointer(self):
+        self.cpu.txa()
+        self.assertEqual(self.cpu.s, 0)
+        
+    def test_txa_processorStatus(self):
+        self.cpu.txa()
+        self.assertEqual(self.cpu.p, 0x0)
+
+    def test_txa_processorStatusBit1Set(self):
+        self.cpu.x = 0
+        self.cpu.txa()
+        self.assertEqual(self.cpu.p, 0x2)
+
+    def test_txa_processorStatusBit7Set(self):
+        self.cpu.x = 255
+        self.cpu.txa()
+        self.assertEqual(self.cpu.p, 0x80)
+
 class TestCLD(unittest.TestCase):
     def setUp(self):
         self.cpu = NesCpu.NesCpu()
