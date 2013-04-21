@@ -317,7 +317,6 @@ class TestCLV(unittest.TestCase):
     def test_clv_processorStatus(self):
         self.cpu.clv()
         self.assertEqual(self.cpu.p, 0x0)        
-        
 
 class TestTSX(unittest.TestCase):
     def setUp(self):
@@ -576,4 +575,35 @@ class TestNop(unittest.TestCase):
         self.cpu.nop()
         self.assertEqual(self.cpu.p, 0x0)
 
-unittest.main()
+class TestSED(unittest.TestCase):
+    def setUp(self):
+        self.cpu = NesCpu.NesCpu()
+        self.cpu.pc = 0x0
+        self.cpu.a = 0
+        self.cpu.x = 0
+        self.cpu.y = 0
+        self.cpu.s = 0
+        self.cpu.p = 0x0
+
+    def test_sed_progCounter(self):
+        self.cpu.sed()
+        self.assertEqual(self.cpu.pc, 0x0)
+
+    def test_sed_accumulator(self):
+        self.cpu.sed()
+        self.assertEqual(self.cpu.a, 0)
+
+    def test_sed_xreg(self):
+        self.cpu.sed()
+        self.assertEqual(self.cpu.x, 0)
+    
+    def test_sed_stackPointer(self):
+        self.cpu.sed()
+        self.assertEqual(self.cpu.s, 0)
+
+    def test_sed_processorStatus(self):
+        self.cpu.sed()
+        self.assertEqual(self.cpu.p, 0x8)    
+
+if __name__=="__main__":
+    unittest.main()

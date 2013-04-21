@@ -221,3 +221,6 @@ class NesCpu(object):
     def nop(self):
         """nop: no operation. do nothing."""
         pass
+    def sed(self):
+        """Sets the Processor Status Decimal Flag"""
+        pass
