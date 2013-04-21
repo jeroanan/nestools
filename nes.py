@@ -5,8 +5,8 @@ import sys
 from rom import Rom
 from chip import NesCpu
 
-class Nes:
-
+class Nes(object):
+"""Class to represent the NES console"""
     _rom = ""
     _cpu = ""
 
@@ -20,6 +20,7 @@ class Nes:
         
         self._cpu = NesCpu.NesCpu()
         self._cpu.pc = 0x8000
+        self.cpu.mem = [0xff] * (0x800)
 
         print self._rom.RomData[self._cpu.pc]
         

@@ -162,6 +162,9 @@ class NesCpu(object):
     s = 0   # stack pointer
     p = 0x0 # processor status    
     
+
+    mem = [0]
+
     # instruction processing
     def clc(self):
         """Clear the Processor Status Carry Flag"""
