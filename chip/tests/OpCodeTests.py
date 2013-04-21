@@ -286,6 +286,73 @@ class TestTAY(unittest.TestCase):
         self.cpu.tay()
         self.assertEqual(self.cpu.p & (1 << 7), 0)  
 
+class TestTXS(unittest.TestCase):
+    def setUp(self):
+        self.cpu = NesCpu.NesCpu()
+        self.cpu.pc = 0x0
+        self.cpu.a = 0
+        self.cpu.x = 0x1FF
+        self.cpu.y = 0
+        self.cpu.s = 0x100
+        self.cpu.p = 0x0
+        
+    def test_txs_progCounter(self):
+        self.cpu.txs()
+        self.assertEqual(self.cpu.pc, 0x0)
+
+    def test_txs_accumulator(self):
+        self.cpu.txs()
+        self.assertEqual(self.cpu.a, 0)
+
+    def test_txs_xreg(self):
+        self.cpu.txs()
+        self.assertEqual(self.cpu.x, 0x1FF)
+
+    def test_txs_yreg(self):
+        self.cpu.txs()
+        self.assertEqual(self.cpu.y, 0)
+
+    def test_txs_stackPointer(self):
+        self.cpu.txs()
+        self.assertEqual(self.cpu.s, 0X1FF)
+
+    def test_txs_processorStautsBit0ShouldBeUnSet(self):
+        self.cpu.txs()
+        self.assertEqual(self.cpu.p & (1 << 0), 0)
+    
+    def test_txs_processorStatusBit1ShouldBeUnSet(self):
+        self.cpu.txs()
+        self.assertEqual(self.cpu.p & (1 << 1), 0)
+
+    def test_txs_processorStatusBit2ShouldBeUnSet(self):
+        self.cpu.txs()
+        self.assertEqual(self.cpu.p & (1 << 2), 0)
+
+    def test_txs_processorStatusBit3ShouldBeUnSet(self):
+        self.cpu.txs()
+        self.assertEqual(self.cpu.p & (1 << 3), 0)
+
+    def test_txs_processorStatusBit4ShouldBeUnSet(self):
+        self.cpu.txs()
+        self.assertEqual(self.cpu.p & (1 << 4), 0)
+
+    def test_txs_processorStatusBit5ShouldBeUnSet(self):
+        self.cpu.txs()
+        self.assertEqual(self.cpu.p & (1 << 5), 0)
+
+    def test_txs_processorStatusBit6ShouldBeUnSet(self):
+        self.cpu.txs()
+        self.assertEqual(self.cpu.p & (1 << 6), 0)
+
+    def test_txs_processorStatusBit7ShouldBeSet(self):
+        self.cpu.txs()
+        self.assertEqual(self.cpu.p & (1 << 7), 128)      
+
+    def test_txs_processorStatusBit7ShouldBeUnSet(self):
+        self.x = 0x100
+        self.cpu.txs()
+        self.assertEqual(self.cpu.p & (1 << 7), 0)      
+
 class TestTAX(unittest.TestCase):
     def setUp(self):
         self.cpu = NesCpu.NesCpu()

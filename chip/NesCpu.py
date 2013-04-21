@@ -190,6 +190,8 @@ class NesCpu(object):
         """Transfer the accumulator to the y register. If the value is 0,
         set the Z flag. If bit 7 is 1, set N."""
         pass
+    def txs(self):
+        pass
     def tax(self):
         """Transfer the accumulator to the x register. If the value is 0,
         set the Z flag. If bit 7 is 1, set N."""
