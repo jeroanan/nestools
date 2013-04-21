@@ -198,6 +198,9 @@ class NesCpu(object):
         """Transfer the accumulator to the x register. If the value is 0,
         set the Z flag. If bit 7 is 1, set N."""
         pass
+    def clv(self):
+        """Clear the Processor Status Overflow Flag"""
+        pass
     def tsx(self):
         """Transfer the stack pointer to the x register. If the value is 0,
         set the Z flag. If bit 7 is 1, set N."""
