@@ -1,4 +1,5 @@
-class NesCpu:
+"""The main class for emulating the 6502."""
+class NesCpu(object):
 
     # (opcodeHex, Mnemomic
     OpCodes = {(0x00, 'BRK'),
@@ -191,6 +192,10 @@ class NesCpu:
         pass
     def tax(self):
         """Transfer the accumulator to the x register. If the value is 0,
+        set the Z flag. If bit 7 is 1, set N."""
+        pass
+    def tsx(self):
+        """Transfer the stack pointer to the x register. If the value is 0,
         set the Z flag. If bit 7 is 1, set N."""
         pass
     def iny(self):
