@@ -164,69 +164,107 @@ class NesCpu(object):
     
     mem = [0]
 
+    def set_z_and_n(self, value):
+        """Sets the Z and N processor flags based on the given value. If Z is 
+        zero, set the Z flag. If the 7th bit of value is 1, set the N flag."""
+        if value:
+            self.p &= ~0x2
+        else:
+            self.p |= 0x2
+
+        if value & (1 << 7) == 128:
+            self.p |= 0x80
+        else:
+            self.p &= ~0x80
+
     # instruction processing
     def clc(self):
         """Clear the Processor Status Carry Flag"""
         self.p &= ~0x1
-        pass
+
     def sec(self):
         """Set the Processor Status Carry Flag"""
         self.p |= 0x1
-        pass
+
     def sei(self):
         """Sets the Processor Status Interrupt Disable Flag"""
         self.p |= 0x4
-        pass
+
     def cli(self):
         """Clear the Processor Status Interrupt Disable Flag"""
         self.p &= ~0x4
-        pass
+
     def dey(self):
         """decrement y register. If after dec it is < 0 or >255 it 
         needs to become 255 and 0 respectively. If it ends up as 0 we
         set the Z flag. Set N flag if bit 7 of the result == 1"""
-        pass
+        self.y -=1
+        self.set_z_and_n(self.y)
+
     def txa(self):
         """Transfer the x register to the accumulator. If the value is 0,
         set the Z flag. If bit 7 is 1, set N."""
-        pass
+        self.a = self.x
+        self.set_z_and_n(self.a)
+
     def tya(self):
         """Transfer the y register to the accumulator. If the value is 0,
         set the Z flag. If bit 7 is 1, set N."""
-        pass
+        self.a = self.y
+        print self.a
+        self.set_z_and_n(self.a)
+
     def tay(self):
         """Transfer the accumulator to the y register. If the value is 0,
         set the Z flag. If bit 7 is 1, set N."""
-        pass
+        self.y = self.a
+        self.set_z_and_n(self.y)
+
     def txs(self):
-        pass
+        """Transfer the x register to the stack pointer. If the value is 0,
+        set the Z flag. If bit 7 is 1, set N."""
+        self.s = self.x
+        self.set_z_and_n(self.s)
+
     def tax(self):
         """Transfer the accumulator to the x register. If the value is 0,
         set the Z flag. If bit 7 is 1, set N."""
-        pass
+        self.x = self.a
+        self.set_z_and_n(self.x)
+
     def clv(self):
         """Clear the Processor Status Overflow Flag"""
-        pass
+        self.p &= ~0x40
+
     def tsx(self):
         """Transfer the stack pointer to the x register. If the value is 0,
         set the Z flag. If bit 7 is 1, set N."""
-        pass
+        self.x = self.s
+        self.set_z_and_n(self.x)
+
     def iny(self):
         """increment y register. If after dec it is < 0 or >255 it 
         needs to become 255 and 0 respectively. If it ends up as 0 we
         set the Z flag. Set N flag if bit 7 of the result == 1"""
-        pass
+        self.y += 1
+        self.set_z_and_n(self.y)
+
     def dex(self):
         """decrement x register. If after dec it is < 0 or >255 it 
         needs to become 255 and 0 respectively. If it ends up as 0 we
         set the Z flag. Set N flag if bit 7 of the result == 1"""
-        pass    
+        self.x -= 1
+        self.set_z_and_n(self.x)
+
     def cld(self):
         """Clear processor decimal mode status flag"""        
-        pass
+        self.p &= ~0x8
+
     def nop(self):
         """nop: no operation. do nothing."""
         pass
+
     def sed(self):
         """Sets the Processor Status Decimal Flag"""
-        pass
+        self.p |= 0x8
+

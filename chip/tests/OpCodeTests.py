@@ -482,9 +482,10 @@ class TestDex(unittest.TestCase):
 
     def test_dex_processorStatus(self):
         self.cpu.dex()
-        self.assertEqual(self.cpu.p, 0x0)
+        self.assertEqual(self.cpu.p, 0x2)
 
-    def test_dex_processorStatusBit1ShouldBeSet(self):
+    def test_dex_processorStatusBit1ShouldBeUnSet(self):
+        self.cpu.x = 2
         self.cpu.dex()
         self.assertEqual(self.cpu.p, 0x2)
 
@@ -538,9 +539,9 @@ class TestDey(unittest.TestCase):
         self.cpu.dey()
         self.assertEqual(self.cpu.p, 0x0)
 
-    def test_dey_processorStatusBit1LoopRound(self):
+    def test_dey_processorStatusBit7LoopRound(self):
         self.cpu.y = 0
-        self.cpu.p = 0x2
+        self.cpu.p = 0x0
         self.cpu.dey()
         self.assertEqual(self.cpu.p, 0x80)
 
