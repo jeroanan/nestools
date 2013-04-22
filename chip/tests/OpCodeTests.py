@@ -188,7 +188,7 @@ class TestTYA(unittest.TestCase):
     def test_tya_processorStatusBit1ShouldBeSet(self):
         self.cpu.y = 0
         self.cpu.tya()
-        self.assertEqual(self.cpu.p, 0x1)
+        self.assertEqual(self.cpu.p, 0x2)
 
     def test_tya_processorStatusBit7ShouldBeSet(self):
         self.cpu.y = 255
@@ -274,7 +274,7 @@ class TestTXS(unittest.TestCase):
         self.assertEqual(self.cpu.p, 0x80)      
 
     def test_txs_processorStatusBit7ShouldBeUnSet(self):
-        self.x = 0x100
+        self.x = 0x1
         self.cpu.txs()
         self.assertEqual(self.cpu.p, 0x0)      
 
@@ -372,7 +372,7 @@ class TestTSX(unittest.TestCase):
 
     def test_tsx_xreg(self):
         self.cpu.tsx()
-        self.assertEqual(self.cpu.x, 0xFF)
+        self.assertEqual(self.cpu.x, 0x1FF)
 
     def test_tsx_yreg(self):
         self.cpu.tsx()

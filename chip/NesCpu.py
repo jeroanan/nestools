@@ -211,7 +211,6 @@ class NesCpu(object):
         """Transfer the y register to the accumulator. If the value is 0,
         set the Z flag. If bit 7 is 1, set N."""
         self.a = self.y
-        print self.a
         self.set_z_and_n(self.a)
 
     def tay(self):
