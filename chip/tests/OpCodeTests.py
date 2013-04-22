@@ -51,7 +51,7 @@ class TestSEC(unittest.TestCase):
         self.cpu.x = 0
         self.cpu.y = 0
         self.cpu.s = 0
-        self.cpu.p = 0x00
+        self.cpu.p = 0x0
 
     def test_sec_progCounter(self):
         self.cpu.sec()
@@ -79,7 +79,7 @@ class TestSEC(unittest.TestCase):
         self.assertEqual(self.cpu.s, 0)        
 
     def test_sec_processorStatus(self):
-        self.cpu.clc()
+        self.cpu.sec()
         self.assertEqual(self.cpu.p, 0x1)
 
 class TestSEI(unittest.TestCase):
