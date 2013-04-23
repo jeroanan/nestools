@@ -213,6 +213,42 @@ class TestLDA(unittest.TestCase):
         self.cpu.lda(128)
         self.assertEqual(self.cpu.p, 0x80)
 
+class TestLDX(unittest.TestCase):
+    def setUp(self:)
+    self.cpu = NesCpu.NesCpu()
+    self.cpu.x = 0
+    self.cpu.p = 0x0
+
+    def test_ldx(self):
+        self.cpu.ldx(42)
+        self.assertEqual(self.cpu.x, 42)
+    
+    def test_ldx_bit1Set(self):
+        self.cpu.ldx(0)
+        self.assertEqual(self.cpu.p, 0x2)
+    
+    def test_ldx_bit7Set(self):
+        self.cpu.ldx(255)
+        self.assertEqual(self.cpu.p, 0x80)
+
+class TestLDY(unittest.TestCase):
+    def setUp(self:)
+    self.cpu = NesCpu.NesCpu()
+    self.cpu.y = 0
+    self.cpu.p = 0x0
+
+    def test_ldy(self):
+        self.cpu.ldy(42)
+        self.assertEqual(self.cpu.y, 42)
+    
+    def test_ldy_bit1Set(self):
+        self.cpu.ldy(0)
+        self.assertEqual(self.cpu.p, 0x2)
+    
+    def test_ldy_bit7Set(self):
+        self.cpu.ldy(255)
+        self.assertEqual(self.cpu.p, 0x80)
+
 class TestTAY(unittest.TestCase):
     def setUp(self):
         self.cpu = NesCpu.NesCpu()

@@ -221,6 +221,16 @@ class NesCpu(object):
         set the Z flag. If bit 7 is 1, set N."""
         pass
 
+    def ldx(self, value):
+        """Loads the given value into the x register If the value is 0,
+        set the Z flag. If bit 7 is 1, set N."""
+        pass
+
+    def ldy(self, value):
+        """Loads the given value into the y register If the value is 0,
+        set the Z flag. If bit 7 is 1, set N."""
+        pass
+
     def tay(self):
         """Transfer the accumulator to the y register. If the value is 0,
         set the Z flag. If bit 7 is 1, set N."""
