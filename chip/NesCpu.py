@@ -167,11 +167,13 @@ class NesCpu(object):
     def set_z_and_n(self, value):
         """Sets the Z and N processor flags based on the given value. If Z is 
         zero, set the Z flag. If the 7th bit of value is 1, set the N flag."""
+        # Z Flag
         if value:
             self.p &= ~0x2
         else:
             self.p |= 0x2
 
+        # N Flag
         if value & (1 << 7) == 128:
             self.p |= 0x80
         else:
@@ -199,6 +201,7 @@ class NesCpu(object):
         needs to become 255 and 0 respectively. If it ends up as 0 we
         set the Z flag. Set N flag if bit 7 of the result == 1"""
         self.y -=1
+        self.y &= 0xFF
         self.set_z_and_n(self.y)
 
     def txa(self):
@@ -246,6 +249,7 @@ class NesCpu(object):
         needs to become 255 and 0 respectively. If it ends up as 0 we
         set the Z flag. Set N flag if bit 7 of the result == 1"""
         self.y += 1
+        self.y &= 0xFF
         self.set_z_and_n(self.y)
 
     def dex(self):
@@ -253,6 +257,7 @@ class NesCpu(object):
         needs to become 255 and 0 respectively. If it ends up as 0 we
         set the Z flag. Set N flag if bit 7 of the result == 1"""
         self.x -= 1
+        self.x &= 0XFF
         self.set_z_and_n(self.x)
 
     def cld(self):

@@ -211,7 +211,7 @@ class TestTAY(unittest.TestCase):
 
     def test_tay_accumulator(self):
         self.cpu.tay()
-        self.assertEqual(self.cpu.a, 0)
+        self.assertEqual(self.cpu.a, 1)
 
     def test_tay_xreg(self):
         self.cpu.tay()
@@ -232,7 +232,7 @@ class TestTAY(unittest.TestCase):
     def test_tay_processorStatusBit1ShouldBeSet(self):
         self.cpu.a = 0
         self.cpu.tay()
-        self.assertEqual(self.cpu.p, 1)
+        self.assertEqual(self.cpu.p, 0x2)
 
     def test_tay_processorStatusBit7ShouldBeSet(self):
         self.cpu.a = 255
@@ -274,7 +274,7 @@ class TestTXS(unittest.TestCase):
         self.assertEqual(self.cpu.p, 0x80)      
 
     def test_txs_processorStatusBit7ShouldBeUnSet(self):
-        self.x = 0x1
+        self.cpu.x = 0x01
         self.cpu.txs()
         self.assertEqual(self.cpu.p, 0x0)      
 
@@ -283,7 +283,7 @@ class TestTAX(unittest.TestCase):
         self.cpu = NesCpu.NesCpu()
         self.cpu.pc = 0x0
         self.cpu.a = 1
-        self.cpu.x =	0
+        self.cpu.x = 0
         self.cpu.y = 0
         self.cpu.s = 0
         self.cpu.p = 0x0
@@ -294,7 +294,7 @@ class TestTAX(unittest.TestCase):
 
     def test_tax_accumulator(self):
         self.cpu.tax()
-        self.assertEqual(self.cpu.a, 0)
+        self.assertEqual(self.cpu.a, 1)
 
     def test_tax_xreg(self):
         self.cpu.tax()
@@ -311,7 +311,7 @@ class TestTAX(unittest.TestCase):
     def test_tax_processorStatusBit1ShouldBeSet(self):
         self.cpu.a = 0
         self.cpu.tax()
-        self.assertEqual(self.cpu.p, 0x1)
+        self.assertEqual(self.cpu.p, 0x2)
 
     def test_tax_processorStatusBit7ShouldBeSet(self):
         self.cpu.a = 255
@@ -368,7 +368,7 @@ class TestTSX(unittest.TestCase):
 
     def test_tsx_accumulator(self):
         self.cpu.tsx()
-        self.assertEqual(self.cpu.a, 1)
+        self.assertEqual(self.cpu.a, 0)
 
     def test_tsx_xreg(self):
         self.cpu.tsx()
@@ -380,7 +380,7 @@ class TestTSX(unittest.TestCase):
 
     def test_tsx_stackPointer(self):
         self.cpu.tsx()
-        self.assertEqual(self.cpu.s, 0XFF)
+        self.assertEqual(self.cpu.s, 0X1FF)
 
     def test_tsx_processorStatusBit1ShouldBeUnSet(self):
         self.cpu.tsx()
@@ -392,7 +392,7 @@ class TestTSX(unittest.TestCase):
         self.assertEqual(self.cpu.p, 0x80)      
 
     def test_tsx_processorStatusBit7ShouldBeUnSet(self):
-        self.s = 0x100
+        self.cpu.s = 0x100
         self.cpu.tsx()
         self.assertEqual(self.cpu.p & (1 << 7), 0)      
 
@@ -438,10 +438,10 @@ class TestIny(unittest.TestCase):
     def test_iny_processorStatusBit1ShouldBeSetAfterLoopRound(self):
         self.cpu.y = 255
         self.cpu.iny()
-        self.assertEqual(self.cpu.p, 0x1)
+        self.assertEqual(self.cpu.p, 0x2)
 
     def test_iny_processorStatusBit7ShouldBeSet(self):
-        self.cpu.x = 254
+        self.cpu.y = 254
         self.cpu.iny()
         self.assertEqual(self.cpu.p, 0x80)
 
@@ -487,13 +487,13 @@ class TestDex(unittest.TestCase):
     def test_dex_processorStatusBit1ShouldBeUnSet(self):
         self.cpu.x = 2
         self.cpu.dex()
-        self.assertEqual(self.cpu.p, 0x2)
+        self.assertEqual(self.cpu.p, 0x0)
 
     def test_dex_processorStatusBit1ShouldBeUnsetAfterLoopRound(self):
         self.cpu.x = 0
         self.cpu.p = 0x2
         self.cpu.dex()
-        self.assertEqual(self.cpu.p & (1 << 1), 0x80)
+        self.assertEqual(self.cpu.p & (1 << 1), 0x0)
 
 class TestDey(unittest.TestCase):
     def setUp(self):
