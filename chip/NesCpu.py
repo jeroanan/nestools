@@ -219,17 +219,20 @@ class NesCpu(object):
     def lda(self, value):
         """Loads the given value into the accumulator If the value is 0,
         set the Z flag. If bit 7 is 1, set N."""
-        pass
+        self.a = value
+        self.set_z_and_n(self.a)
 
     def ldx(self, value):
         """Loads the given value into the x register If the value is 0,
         set the Z flag. If bit 7 is 1, set N."""
-        pass
+        self.x = value
+        self.set_z_and_n(self.x)
 
     def ldy(self, value):
         """Loads the given value into the y register If the value is 0,
         set the Z flag. If bit 7 is 1, set N."""
-        pass
+        self.y = value
+        self.set_z_and_n(self.y)
 
     def tay(self):
         """Transfer the accumulator to the y register. If the value is 0,
