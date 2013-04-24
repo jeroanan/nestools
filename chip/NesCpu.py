@@ -196,6 +196,12 @@ class NesCpu(object):
         """Clear the Processor Status Interrupt Disable Flag"""
         self.p &= ~0x4
 
+    def adc(self, value):
+        """Add the given value to the accumulator. 
+        Set N and Z flags as needed."""
+        self.a += value
+        self.set_z_and_n(self.a)
+
     def dey(self):
         """decrement y register. If after dec it is < 0 or >255 it 
         needs to become 255 and 0 respectively. If it ends up as 0 we

@@ -150,6 +150,39 @@ class TestCLI(unittest.TestCase):
         self.cpu.cli()
         self.assertEqual(self.cpu.p, 0x0)        
 
+class TestADC(unittest.TestCase):
+    def setUp(self):
+        self.cpu = NesCpu.NesCpu()
+        self.a = 0
+        self.x = 0
+        self.y = 0
+        self.s = 0
+        self.p = 0x0
+
+    def test_adc_accumulator(self):
+        self.cpu.adc(2)
+        self.assertEqual(self.cpu.a, 2)
+
+    def test_adc_xreg(self):
+        self.cpu.adc(2)
+        self.assertEqual(self.cpu.x, 0)
+
+    def test_adc_yreg(self):
+        self.cpu.adc(2)
+        self.assertEqual(self.cpu.y, 0)
+
+    def test_adc_stackPointer(self):
+        self.cpu.adc(2)
+        self.assertEqual(self.cpu.s, 0)
+        
+    def test_adc_processorStatus(self):
+        self.cpu.adc(2)
+        self.assertEqual(self.cpu.p, 0x0)
+
+    def test_adc_processorStatusBit7Set(self):
+        self.cpu.adc(255)
+        self.assertEqual(self.cpu.p, 0x80)    
+
 class TestTYA(unittest.TestCase):
     def setUp(self):
         self.cpu = NesCpu.NesCpu()
@@ -214,10 +247,10 @@ class TestLDA(unittest.TestCase):
         self.assertEqual(self.cpu.p, 0x80)
 
 class TestLDX(unittest.TestCase):
-    def setUp(self:)
-    self.cpu = NesCpu.NesCpu()
-    self.cpu.x = 0
-    self.cpu.p = 0x0
+    def setUp(self):
+        self.cpu = NesCpu.NesCpu()
+        self.cpu.x = 0
+        self.cpu.p = 0x0
 
     def test_ldx(self):
         self.cpu.ldx(42)
@@ -232,10 +265,10 @@ class TestLDX(unittest.TestCase):
         self.assertEqual(self.cpu.p, 0x80)
 
 class TestLDY(unittest.TestCase):
-    def setUp(self:)
-    self.cpu = NesCpu.NesCpu()
-    self.cpu.y = 0
-    self.cpu.p = 0x0
+    def setUp(self):
+        self.cpu = NesCpu.NesCpu()
+        self.cpu.y = 0
+        self.cpu.p = 0x0
 
     def test_ldy(self):
         self.cpu.ldy(42)
