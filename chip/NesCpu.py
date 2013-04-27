@@ -1,40 +1,53 @@
 """The main class for emulating the 6502."""
 class NesCpu(object):
 
+    MEM_IMM = "imm" # Immediate
+    MEM_ABS = "abs" # absolute
+    MEM_ZP = "zep" # Zero Page  
+    MEM_IMP = "imp" # Implied
+    MEM_ABS = "abs" # Absolute
+    MEM_ABSX = "abx"
+    MEM_ABSY = "aby"
+    MEM_INDX = "idx" # Indexed X    
+    MEM_INDY = "idy" # Indexed Y
+    MEM_ZPX = "zpx" # Zero Page X
+    MEM_ZPY = "zpy" # Zero Page Y
+    
+
     # (opcodeHex, Mnemomic
     OpCodes = {(0x00, 'BRK'),
-               (0x01, 'ORA'),
-               (0x05, 'ORA'),
-               (0x06, 'ASL'),
-               (0x08, 'PHP'),
-               (0x09, 'ORA'),
-               (0x0A, 'ASL'),
-               (0x0D, 'ORA'),
+               (0x01, 'ORA', MEM_INDX),
+               (0x05, 'ORA', MEM_ZPY),
+               (0x06, 'ASL', MEM_ZPY),
+               (0x08, 'PHP', MEM_IMP),
+               (0x09, 'ORA', MEM_IMM),
+               (0x0A, 'ASL', MEM_IMP),
+               (0x0D, 'ORA', MEM_ABS),
                (0x0E, 'ASL'),
-               (0x10, 'BPL'),
-               (0x11, 'ORA'),
-               (0x15, 'ORA'),
-               (0x16, 'ASL'),
-               (0x18, 'CLC'),
-               (0x19, 'ORA'),
-               (0x1D, 'ORA'),
+               (0x10, 'BPL', MEM_IMP),
+               (0x11, 'ORA', MEM_INDY),
+               (0x15, 'ORA', MEM_ZPX),
+               (0x16, 'ASL', MEM_ZPX,
+               (0x18, 'CLC', MEM_IMP),
+               (0x19, 'ORA', MEM_ABSY),
+               (0x1D, 'ORA', MEM_ABSX),
                (0x1E, 'ASL'),
-               (0x20, 'JSR'),
-               (0x21, 'AND'),
-               (0x24, 'BIT'),
-               (0x25, 'AND'),
-               (0x26, 'ROL'),
-               (0x28, 'PLP'),
-               (0x29, 'AND'),
-               (0x2A, 'ROL'),
-               (0x2C, 'BIT'),
-               (0x2D, 'AND'),
-               (0x2E, 'ROL'),
-               (0x30, 'BMI'),
-               (0x31, 'AND'),
-               (0x35, 'AND'),
-               (0x36, 'ROL'),
-               (0x38, 'SEC'),
+               (0x20, 'JSR', MEM_IMP),
+               (0x21, 'AND', MEM_INDX),
+               (0x24, 'BIT', MEM_ZPY),
+               (0x25, 'AND', MEM_ZPY),
+               (0x26, 'ROL', MEM_ZPY),
+               (0x28, 'PLP', MEM_IMP),
+               (0x29, 'AND', MEM_IMM),
+               (0x2A, 'ROL', MEM_IMP),
+               (0x2C, 'BIT', MEM_ABS),
+               (0x2D, 'AND', MEM_ABS),
+               (0x2E, 'ROL', MEM_ABS),
+               (0x30, 'BMI', MEM_IMP),
+               (0x31, 'AND', MEM_INDY),
+               (0x35, 'AND', MEM_ZPX),
+               (0x36, 'ROL', MEM_ZPX),
+               (0x38, 'SEC', MEM_IMP),
                (0x39, 'AND'),
                (0x3D, 'AND'),
                (0x3E, 'ROL'),
@@ -199,6 +212,7 @@ class NesCpu(object):
     def adc(self, value):
         """Add the given value to the accumulator. 
         Set N and Z flags as needed."""
+        # todo: pretty sure i've oversimplified here. revisit.
         self.a += value
         self.set_z_and_n(self.a)
 
