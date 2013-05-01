@@ -14,7 +14,7 @@ class NesCpu(object):
     MEM_ZPY = "zpy" # Zero Page Y
     
 
-    # (opcodeHex, Mnemomic
+    # opcodeHex, (Mnemomic, Memory Addressing mode)
     OpCodes = {(0x00, ('BRK')),
                (0x01, ('ORA', MEM_INDX)),
                (0x05, ('ORA', MEM_ZPY)),
@@ -176,6 +176,13 @@ class NesCpu(object):
     p = 0x0 # processor status    
     
     mem = [0]
+
+    def get_operand(self, instr, address):
+        """Gets the operand for the instruction based on its addressing mode.
+        instr: The tuple containing mnemonic and addressing mode from above
+        for the current instruction.
+        address: The address supplied with the opcode"""
+        pass
 
     def set_z_and_n(self, value):
         """Sets the Z and N processor flags based on the given value. If Z is 

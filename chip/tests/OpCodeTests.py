@@ -771,5 +771,22 @@ class TestSED(unittest.TestCase):
         self.cpu.sed()
         self.assertEqual(self.cpu.p, 0x8)    
 
+class TestImmediateAddressing(unittest.TestCase):
+    
+    def setUp(self):
+        self.cpu = NesCpu.NesCpu()
+        
+    def test_immediate_addressing(self):
+        self.assertEqual(self.cpu.get_operand(("CPX", self.cpu.MEM_IMM), 0x80))
+
+class TestAbsoluteAddressing(unittest.TestCase):
+    def setUp(self):
+        self.cpu = NesCpu.NesCpu()
+        self.cpu.mem = [0xff] * (0x800)
+        self.cpu.mem[128] = 0x5
+
+    def test_absolute_addressing(self):
+        self.assertEqual(self.cpu.get_operand(('ORA', self.cpu.MEM_ABS), 0x80))
+
 if __name__=="__main__":
     unittest.main()
